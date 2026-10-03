@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Vibe-Trading</title>
+  <style>
+    body { margin: 0; font-family: -apple-system, sans-serif; background: #0d0f12; color: #eee; }
+    main { max-width: 720px; margin: 0 auto; padding: 20px 16px 40px; }
+    h1 { font-size: 22px; margin: 0 0 4px; }
+    p { line-height: 1.45; }
+    .muted { color: #9aa; font-size: 14px; }
+    form, .card { border: 1px solid #2a3340; border-radius: 12px; padding: 14px; margin: 12px 0; }
+    form { border-color: #6cf; }
+    label { display: block; font-size: 13px; margin: 10px 0 4px; }
+    select, input { width: 100%; box-sizing: border-box; padding: 10px; border-radius: 8px; border: 1px solid #334; background: #15181d; color: #eee; }
+    button { margin-top: 12px; padding: 10px 14px; border: 0; border-radius: 8px; background: #6cf; color: #041018; font-weight: 650; }
+    pre { white-space: pre-wrap; word-break: break-all; background: #15181d; padding: 10px; border-radius: 8px; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Vibe-Trading</h1>
+    <p class="muted">研究列の最初の画面。入力が無い id は始まりません。点数は Nautilus だけです。</p>
+    <form>
+      <label for="kind">入力</label>
+      <select id="kind">
+        <option value="image">画像</option>
+        <option value="video">動画</option>
+        <option value="url">URL</option>
+        <option value="zip">ZIP</option>
+        <option value="pdf">PDF</option>
+        <option value="source" selected>ソース</option>
+      </select>
+      <label for="source">ファイルまたは URL</label>
+      <input id="source" value="research/nautilus/backtest.py" />
+      <label for="bars">足 CSV</label>
+      <input id="bars" value="data/xauusd_m1_sample.csv" />
+      <button type="button" id="copy">実行コマンドをコピー</button>
+      <pre id="cmd"></pre>
+    </form>
+    <div class="card">
+      <p>Qlib → FinRL → Nautilus が合否。MT5 と TradingView はチャンピオン置換後だけ。</p>
+      <p class="muted">直近サンプルは約定 2、純益 0.01。未置換。</p>
+    </div>
+  </main>
+  <script>
+    const kind = document.getElementById('kind');
+    const source = document.getElementById('source');
+    const bars = document.getElementById('bars');
+    const cmd = document.getElementById('cmd');
+    function render() {
+      cmd.textContent = 'python3 -m research.run --kind ' + kind.value + ' --source ' + source.value + ' --bars ' + bars.value + ' --bar M1';
+    }
+    [kind, source, bars].forEach((el) => el.addEventListener('input', render));
+    document.getElementById('copy').addEventListener('click', () => navigator.clipboard.writeText(cmd.textContent));
+    render();
+  </script>
+</body>
+</html>
