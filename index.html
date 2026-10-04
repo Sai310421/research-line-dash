@@ -1,60 +1,71 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ja">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Vibe-Trading</title>
-  <style>
-    body { margin: 0; font-family: -apple-system, sans-serif; background: #0d0f12; color: #eee; }
-    main { max-width: 720px; margin: 0 auto; padding: 20px 16px 40px; }
-    h1 { font-size: 22px; margin: 0 0 4px; }
-    p { line-height: 1.45; }
-    .muted { color: #9aa; font-size: 14px; }
-    form, .card { border: 1px solid #2a3340; border-radius: 12px; padding: 14px; margin: 12px 0; }
-    form { border-color: #6cf; }
-    label { display: block; font-size: 13px; margin: 10px 0 4px; }
-    select, input { width: 100%; box-sizing: border-box; padding: 10px; border-radius: 8px; border: 1px solid #334; background: #15181d; color: #eee; }
-    button { margin-top: 12px; padding: 10px 14px; border: 0; border-radius: 8px; background: #6cf; color: #041018; font-weight: 650; }
-    pre { white-space: pre-wrap; word-break: break-all; background: #15181d; padding: 10px; border-radius: 8px; }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b1020">
+<title>Research-Line Mobile</title>
+<style>
+:root{color-scheme:dark;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+*{box-sizing:border-box}
+body{margin:0;background:#090e1a;color:#eef3ff}
+main{max-width:680px;margin:auto;padding:16px 14px 32px}
+h1{font-size:23px;margin:0 0 4px}.muted{color:#91a0bc;font-size:13px}.card{background:#11192a;border:1px solid #26324a;border-radius:16px;padding:14px;margin:12px 0}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+a.btn{display:flex;align-items:center;justify-content:center;min-height:52px;padding:12px;border-radius:12px;border:1px solid #344361;background:#0c1424;color:#eef3ff;text-decoration:none;font-weight:750;text-align:center}
+a.primary{background:#315ed7;border-color:#315ed7}a.warn{background:#39271b;border-color:#624a2e}
+.pills{display:flex;gap:6px;flex-wrap:wrap}.pill{font-size:11px;padding:5px 8px;border:1px solid #35435e;border-radius:999px}
+ol{padding-left:20px;line-height:1.55}.note{font-size:12px;color:#a9b5ca;line-height:1.5}
+@media(max-width:430px){.grid{grid-template-columns:1fr}}
+</style>
 </head>
 <body>
-  <main>
-    <h1>Vibe-Trading</h1>
-    <p class="muted">研究列の最初の画面。入力が無い id は始まりません。点数は Nautilus だけです。</p>
-    <form>
-      <label for="kind">入力</label>
-      <select id="kind">
-        <option value="image">画像</option>
-        <option value="video">動画</option>
-        <option value="url">URL</option>
-        <option value="zip">ZIP</option>
-        <option value="pdf">PDF</option>
-        <option value="source" selected>ソース</option>
-      </select>
-      <label for="source">ファイルまたは URL</label>
-      <input id="source" value="research/nautilus/backtest.py" />
-      <label for="bars">足 CSV</label>
-      <input id="bars" value="data/xauusd_m1_sample.csv" />
-      <button type="button" id="copy">実行コマンドをコピー</button>
-      <pre id="cmd"></pre>
-    </form>
-    <div class="card">
-      <p>Qlib → FinRL → Nautilus が合否。MT5 と TradingView はチャンピオン置換後だけ。</p>
-      <p class="muted">直近サンプルは約定 2、純益 0.01。未置換。</p>
-    </div>
-  </main>
-  <script>
-    const kind = document.getElementById('kind');
-    const source = document.getElementById('source');
-    const bars = document.getElementById('bars');
-    const cmd = document.getElementById('cmd');
-    function render() {
-      cmd.textContent = 'python3 -m research.run --kind ' + kind.value + ' --source ' + source.value + ' --bars ' + bars.value + ' --bar M1';
-    }
-    [kind, source, bars].forEach((el) => el.addEventListener('input', render));
-    document.getElementById('copy').addEventListener('click', () => navigator.clipboard.writeText(cmd.textContent));
-    render();
-  </script>
+<main>
+<header>
+<h1>Research-Line Mobile</h1>
+<div class="muted">iPhone → GitHub → Actions → Nautilus Cloud</div>
+</header>
+
+<section class="card">
+<div class="pills">
+<span class="pill">PC不要</span><span class="pill">Vercel不要</span><span class="pill">Private Repo制御</span><span class="pill">Nautilus authoritative</span>
+</div>
+</section>
+
+<section class="card">
+<h2 style="font-size:16px;margin-top:0">操作</h2>
+<div class="grid">
+<a class="btn primary" href="https://github.com/Sai310421/research-line/actions/workflows/control-plane.yml">Cloud RUN</a>
+<a class="btn" href="https://github.com/Sai310421/research-line/actions">実行状況</a>
+<a class="btn" href="https://github.com/Sai310421/research-line/blob/main/research/loop/cloud_champion.json">Cloud Champion</a>
+<a class="btn" href="https://github.com/Sai310421/research-line/tree/main/research/lineage/runs">Run履歴</a>
+<a class="btn" href="https://github.com/Sai310421/research-line/actions/workflows/cloud-runtime-smoke.yml">Runtime Smoke</a>
+<a class="btn" href="https://github.com/Sai310421/research-line">Research-Line</a>
+</div>
+</section>
+
+<section class="card">
+<h2 style="font-size:16px;margin-top:0">スマホ運用</h2>
+<ol>
+<li><b>Cloud RUN</b> をタップ。</li>
+<li><b>Run workflow</b> を開き、symbol / bar / candidateを選択。</li>
+<li>開始後は <b>実行状況</b> で進捗確認。</li>
+<li>完了後は <b>Cloud Champion</b> と Run履歴を確認。</li>
+</ol>
+<div class="note">GitHubへのログインが必要です。公開ページ側にはGitHub token・CONTROL_KEY・取引口座情報を保存しません。</div>
+</section>
+
+<section class="card">
+<h2 style="font-size:16px;margin-top:0">対象</h2>
+<div class="pills">
+<span class="pill">XAUUSD</span><span class="pill">EURUSD</span><span class="pill">GBPUSD</span><span class="pill">USDJPY</span><span class="pill">XAGUSD</span>
+</div>
+<p class="note">5銘柄をまとめて走らせる場合は各symbolでCloud RUNを投入します。Local Raw Tick / MT5 Realityは必要時のみmini-PC側を使用します。</p>
+</section>
+
+<section class="card">
+<a class="btn warn" href="https://github.com/Sai310421/research-line/actions">失敗Runを確認 / RETRY</a>
+</section>
+</main>
 </body>
 </html>
