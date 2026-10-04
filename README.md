@@ -4,6 +4,14 @@
 
 PC不要 / Vercel不要 / GitHubログインだけで操作できます。
 
+## ファイル添付
+
+[📎 ZIP・画像・PDF・MQ5等を添付](https://github.com/Sai310421/research-line/upload/main/research/inbox)
+
+[📥 Inboxを確認](https://github.com/Sai310421/research-line/tree/main/research/inbox)
+
+アップロード先は private `Sai310421/research-line/research/inbox/` です。
+
 ## 操作
 
 [▶ Cloud RUN](https://github.com/Sai310421/research-line/actions/workflows/control-plane.yml)
