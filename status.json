@@ -1,37 +1,43 @@
 {
-  "updated_at": "2026-10-04",
+  "updated_at": "2026-10-04T21:07:26.024410+00:00",
   "source": "Sai310421/research-line@main",
   "qlib": {
     "version": "0.9.7",
     "dependency_declared": true,
     "connected": false,
-    "state": "PROBE ON DEMAND",
+    "state": "WAIT",
     "last_run": null,
-    "candidates": null,
-    "kpi": null
+    "candidates": null
   },
   "finrl": {
     "version": "0.3.7",
     "dependency_declared": true,
     "connected": false,
-    "state": "PROBE ON DEMAND",
+    "state": "WAIT",
     "last_run": null,
-    "candidates": null,
-    "kpi": null
+    "candidates": null
   },
   "vibe": {
     "ui_present": true,
     "connected": false,
-    "state": "UI READY / RUNTIME NOT VENDORED",
-    "last_brief": null
+    "state": "WAIT",
+    "last_brief": null,
+    "reason": "vibe-trading source missing"
+  },
+  "candidates": {
+    "count": null
   },
   "nautilus": {
     "authoritative": true,
     "champion_state": "baseline",
-    "net": 0,
-    "pf": 1,
-    "max_dd_pct": 100,
-    "cost": 1,
+    "net": 0.0,
+    "return_pct": null,
+    "pf": 1.0,
+    "wr": null,
+    "max_dd_pct": 100.0,
+    "trades": null,
+    "cost": 1.0,
+    "kpi_valid": true,
     "promotion_eligible": false
   }
 }
