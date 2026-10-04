@@ -1,0 +1,37 @@
+{
+  "updated_at": "2026-10-04",
+  "source": "Sai310421/research-line@main",
+  "qlib": {
+    "version": "0.9.7",
+    "dependency_declared": true,
+    "connected": false,
+    "state": "PROBE ON DEMAND",
+    "last_run": null,
+    "candidates": null,
+    "kpi": null
+  },
+  "finrl": {
+    "version": "0.3.7",
+    "dependency_declared": true,
+    "connected": false,
+    "state": "PROBE ON DEMAND",
+    "last_run": null,
+    "candidates": null,
+    "kpi": null
+  },
+  "vibe": {
+    "ui_present": true,
+    "connected": false,
+    "state": "UI READY / RUNTIME NOT VENDORED",
+    "last_brief": null
+  },
+  "nautilus": {
+    "authoritative": true,
+    "champion_state": "baseline",
+    "net": 0,
+    "pf": 1,
+    "max_dd_pct": 100,
+    "cost": 1,
+    "promotion_eligible": false
+  }
+}
