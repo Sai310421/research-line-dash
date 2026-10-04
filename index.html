@@ -47,18 +47,63 @@ textarea.vibe{min-height:94px;resize:vertical}
 pre.brief{white-space:pre-wrap;word-break:break-word;background:#080d18;border:1px solid #26324a;border-radius:12px;padding:10px;font-size:12px;line-height:1.45;max-height:240px;overflow:auto}
 button.action{width:100%;min-height:48px;border-radius:11px;border:1px solid #315ed7;background:#315ed7;color:#fff;font-weight:800}
 @media(max-width:560px){.sysgrid{grid-template-columns:1fr}.vibegrid{grid-template-columns:1fr}}
+
+.heroKpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:12px 0}
+.heroKpi{background:#0c1424;border:1px solid #2c3955;border-radius:12px;padding:10px;min-width:0}
+.heroKpi span{display:block;color:#91a0bc;font-size:10px}.heroKpi b{display:block;font-size:17px;overflow-wrap:anywhere}
+.circuit{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;align-items:center}
+.circuitBox{background:#0c1424;border:1px solid #344361;border-radius:13px;padding:11px;text-align:center;min-width:0}
+.circuitBox b{display:block;font-size:12px}.circuitBox small{display:block;color:#91a0bc;margin-top:3px;font-size:10px}
+.agentCore{border:1px solid #4a3f72;background:#16132a;border-radius:16px;padding:14px;margin:12px 0;text-align:center}
+.agentOrb{width:54px;height:54px;border-radius:50%;margin:0 auto 8px;background:radial-gradient(circle at 35% 30%,#fff,#9f8cff 25%,#5237a8 60%,#1a1433 100%);box-shadow:0 0 28px rgba(143,117,255,.35)}
+.logbox{background:#070c15;border:1px solid #26324a;border-radius:12px;padding:10px;max-height:220px;overflow:auto}
+.logline{display:grid;grid-template-columns:auto 1fr;gap:8px;padding:6px 0;border-bottom:1px solid #1e2a40;font-size:11px}
+.logline:last-child{border-bottom:0}.tag{font-weight:800}.chatbar{display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:center;margin-top:10px}
+.chatplus,.chatrun{min-width:44px;height:44px;border-radius:50%;border:1px solid #3b4865;background:#11192a;color:#fff;font-weight:800}
+.chatinput{width:100%;min-height:44px;border-radius:22px;border:1px solid #344361;background:#0c1424;color:#fff;padding:10px 14px;font-size:16px}
+@media(max-width:560px){.heroKpis{grid-template-columns:1fr 1fr}.circuit{grid-template-columns:1fr 1fr}}
 </style>
 </head>
 <body>
 <main>
 <header>
-<h1>Research-Line Mobile</h1>
-<div class="muted">iPhone → GitHub → Actions → Nautilus Cloud</div>
+<h1>Research-Line Command Center</h1>
+<div class="muted">iPhone Command Center · Research → ML → RL → Nautilus</div>
 </header>
 
 <section class="card">
 <div class="pills">
 <span class="pill">PC不要</span><span class="pill">Vercel不要</span><span class="pill">Private Repo制御</span><span class="pill">Nautilus authoritative</span>
+</div>
+</section>
+
+<section class="card">
+<h2 style="font-size:16px;margin-top:0">Live Overview</h2>
+<div class="heroKpis">
+  <div class="heroKpi"><span>Champion PF</span><b id="topPf">—</b></div>
+  <div class="heroKpi"><span>Max DD</span><b id="topDd">—</b></div>
+  <div class="heroKpi"><span>Qlib</span><b id="topQlib">—</b></div>
+  <div class="heroKpi"><span>FinRL</span><b id="topFinrl">—</b></div>
+</div>
+<div class="circuit">
+  <div class="circuitBox"><b>Vibe-Trading</b><small>Research prompt</small></div>
+  <div class="circuitBox"><b>Qlib / RD-Agent</b><small>Alpha & ML</small></div>
+  <div class="circuitBox"><b>FinRL</b><small>RL candidate</small></div>
+  <div class="circuitBox"><b>Nautilus</b><small>Authoritative BT</small></div>
+</div>
+<div class="agentCore">
+  <div class="agentOrb"></div>
+  <b>Research Agent</b>
+  <div class="muted" id="agentState">Stack statusを読込中…</div>
+</div>
+<div class="logbox" id="liveLogs">
+  <div class="logline"><span class="tag">BOOT</span><span>Research-Line Dashboard ready.</span></div>
+  <div class="logline"><span class="tag">WAIT</span><span>Qlib / FinRL runtime status loading…</span></div>
+</div>
+<div class="chatbar">
+  <button class="chatplus" type="button" id="chatAttach">＋</button>
+  <input class="chatinput" id="quickPrompt" placeholder="こんなEDGEを探して…">
+  <button class="chatrun" type="button" id="quickRun">→</button>
 </div>
 </section>
 
@@ -215,6 +260,15 @@ button.action{width:100%;min-height:48px;border-radius:11px;border:1px solid #31
       const n=d.nautilus||{};
       const note=document.getElementById('stackNote');
       if(note) note.textContent='Sanitized status · Nautilus Champion: '+(n.champion_state||'—')+' · PF '+(n.pf??'—')+' · MaxDD '+(n.max_dd_pct??'—')+'% · Promotion '+(n.promotion_eligible?'YES':'NO');
+      const set=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v};
+      set('topPf',n.pf??'—'); set('topDd',(n.max_dd_pct??'—')+(n.max_dd_pct==null?'':'%'));
+      set('topQlib',d.qlib?.connected?'ONLINE':'WAIT'); set('topFinrl',d.finrl?.connected?'ONLINE':'WAIT');
+      set('agentState','Vibe '+(d.vibe?.ui_present?'READY':'WAIT')+' · Qlib '+(d.qlib?.connected?'ONLINE':'WAIT')+' · FinRL '+(d.finrl?.connected?'ONLINE':'WAIT')+' · Nautilus '+(n.authoritative?'SCORER':'WAIT'));
+      const logs=document.getElementById('liveLogs');
+      if(logs) logs.innerHTML=[
+        ['VIBE',d.vibe?.state||'—'],['QLIB',d.qlib?.state||'—'],['FINRL',d.finrl?.state||'—'],
+        ['NAUT', 'PF '+(n.pf??'—')+' / MaxDD '+(n.max_dd_pct??'—')+'% / '+(n.promotion_eligible?'PROMOTION READY':'NOT PROMOTED')]
+      ].map(x=>'<div class="logline"><span class="tag">'+x[0]+'</span><span>'+x[1]+'</span></div>').join('');
     }catch(e){
       const note=document.getElementById('stackNote'); if(note) note.textContent='status.json読込失敗';
     }
@@ -239,6 +293,14 @@ button.action{width:100%;min-height:48px;border-radius:11px;border:1px solid #31
       'Rule: Qlib/FinRLの結果だけでは昇格させない。Nautilus KPIのみ正式採点。',
       'Unknown KPI: N/Aとして扱い、推定値を実測値として表示しない。'
     ].join('\n');
+  });
+  document.getElementById('chatAttach')?.addEventListener('click',()=>document.getElementById('fileInput')?.click());
+  document.getElementById('quickRun')?.addEventListener('click',()=>{
+    const q=(document.getElementById('quickPrompt')?.value||'').trim();
+    if(!q)return;
+    const vp=document.getElementById('vibePrompt'); if(vp)vp.value=q;
+    document.getElementById('makeBrief')?.click();
+    document.getElementById('briefOut')?.scrollIntoView({behavior:'smooth',block:'center'});
   });
   render();
   loadStack();
