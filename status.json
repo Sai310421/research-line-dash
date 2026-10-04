@@ -1,31 +1,31 @@
 {
-  "updated_at": "2026-10-04T22:16:03.904251+00:00",
+  "updated_at": "2026-10-04T22:38:42.346997+00:00",
   "source": "Sai310421/research-line@main",
   "qlib": {
     "version": "0.9.7",
-    "dependency_declared": true,
-    "connected": false,
-    "state": "WAIT",
-    "last_run": null,
-    "candidates": null
+    "connected": true,
+    "state": "PASS",
+    "reason": "qlib init ok",
+    "last_run": "2026-10-04T22:38:39.358275+00:00",
+    "candidates": 0
   },
   "finrl": {
     "version": "0.3.7",
-    "dependency_declared": true,
     "connected": false,
     "state": "WAIT",
-    "last_run": null,
-    "candidates": null
+    "reason": "finrl env: ModuleNotFoundError: gymnasium",
+    "last_run": "2026-10-04T22:38:39.358275+00:00",
+    "candidates": 0
   },
   "vibe": {
-    "ui_present": true,
-    "connected": false,
-    "state": "WAIT",
-    "last_brief": null,
-    "reason": "vibe-trading source missing"
+    "connected": true,
+    "state": "PASS",
+    "reason": "vibe-trading source present",
+    "last_run": "2026-10-04T22:38:39.358275+00:00",
+    "ui_present": true
   },
   "candidates": {
-    "count": null
+    "count": 0
   },
   "nautilus": {
     "authoritative": true,
