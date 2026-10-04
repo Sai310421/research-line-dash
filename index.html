@@ -31,6 +31,22 @@ ol{padding-left:20px;line-height:1.55}.note{font-size:12px;color:#a9b5ca;line-he
 .attachhint{font-size:11px;color:#8998b4;margin-top:8px;line-height:1.45}
 .hiddenfile{display:none}
 @media(max-width:430px){.attachactions{grid-template-columns:1fr}}
+
+.sysgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+.sys{border:1px solid #344361;border-radius:14px;padding:12px;background:#0c1424;min-width:0}
+.sys h3{font-size:14px;margin:0 0 8px}.sys .state{font-size:12px;font-weight:800;letter-spacing:.03em}
+.kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin-top:9px}
+.kpi{border:1px solid #2c3955;border-radius:10px;padding:8px;min-width:0}
+.kpi span{display:block;color:#91a0bc;font-size:10px}.kpi b{display:block;font-size:15px;overflow-wrap:anywhere}
+.flow{display:flex;gap:6px;align-items:center;overflow:auto;padding:2px 0 4px}
+.node{white-space:nowrap;border:1px solid #35435e;border-radius:999px;padding:6px 9px;font-size:11px}
+.arrow{color:#7283a4;font-size:12px}
+textarea.vibe,select.vibe,input.vibe{width:100%;font:inherit;color:#eef3ff;background:#0c1424;border:1px solid #344361;border-radius:10px;padding:11px;min-height:44px}
+textarea.vibe{min-height:94px;resize:vertical}
+.vibegrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+pre.brief{white-space:pre-wrap;word-break:break-word;background:#080d18;border:1px solid #26324a;border-radius:12px;padding:10px;font-size:12px;line-height:1.45;max-height:240px;overflow:auto}
+button.action{width:100%;min-height:48px;border-radius:11px;border:1px solid #315ed7;background:#315ed7;color:#fff;font-weight:800}
+@media(max-width:560px){.sysgrid{grid-template-columns:1fr}.vibegrid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -56,6 +72,69 @@ ol{padding-left:20px;line-height:1.55}.note{font-size:12px;color:#a9b5ca;line-he
 <a class="btn" href="https://github.com/Sai310421/research-line/actions/workflows/cloud-runtime-smoke.yml">Runtime Smoke</a>
 <a class="btn" href="https://github.com/Sai310421/research-line">Research-Line</a>
 </div>
+</section>
+
+
+<section class="card">
+<h2 style="font-size:16px;margin-top:0">Research Stack 状態</h2>
+<div class="sysgrid">
+  <div class="sys">
+    <h3>Microsoft Qlib</h3>
+    <div class="state" id="qlibState">LOADING</div>
+    <div class="kpis">
+      <div class="kpi"><span>Version</span><b id="qlibVersion">—</b></div>
+      <div class="kpi"><span>Connected</span><b id="qlibConnected">—</b></div>
+      <div class="kpi"><span>Last Run</span><b id="qlibLast">—</b></div>
+      <div class="kpi"><span>Candidates</span><b id="qlibCandidates">—</b></div>
+    </div>
+  </div>
+  <div class="sys">
+    <h3>FinRL</h3>
+    <div class="state" id="finrlState">LOADING</div>
+    <div class="kpis">
+      <div class="kpi"><span>Version</span><b id="finrlVersion">—</b></div>
+      <div class="kpi"><span>Connected</span><b id="finrlConnected">—</b></div>
+      <div class="kpi"><span>Last Run</span><b id="finrlLast">—</b></div>
+      <div class="kpi"><span>Candidates</span><b id="finrlCandidates">—</b></div>
+    </div>
+  </div>
+  <div class="sys">
+    <h3>Vibe-Trading</h3>
+    <div class="state" id="vibeState">LOADING</div>
+    <div class="kpis">
+      <div class="kpi"><span>UI</span><b id="vibeUi">—</b></div>
+      <div class="kpi"><span>Runtime</span><b id="vibeRuntime">—</b></div>
+      <div class="kpi"><span>Last Brief</span><b id="vibeLast">—</b></div>
+      <div class="kpi"><span>Scorer</span><b>Nautilus</b></div>
+    </div>
+  </div>
+</div>
+<div class="flow" style="margin-top:10px">
+  <span class="node">Vibe</span><span class="arrow">→</span>
+  <span class="node">Qlib</span><span class="arrow">→</span>
+  <span class="node">RD-Agent</span><span class="arrow">→</span>
+  <span class="node">FinRL</span><span class="arrow">→</span>
+  <span class="node">Nautilus</span>
+</div>
+<p class="note" id="stackNote">状態読込中…</p>
+</section>
+
+<section class="card">
+<h2 style="font-size:16px;margin-top:0">Vibe-Trading Research Console</h2>
+<textarea class="vibe" id="vibePrompt" placeholder="例：XAUUSDでPF 1.2以上、DD 5%以内の短期EDGEを探索。66特徴量を使い、OOS優先。"></textarea>
+<div class="vibegrid" style="margin-top:8px">
+  <select class="vibe" id="vibeSymbol"><option>XAUUSD</option><option>EURUSD</option><option>GBPUSD</option><option>USDJPY</option><option>XAGUSD</option></select>
+  <select class="vibe" id="vibeTf"><option>M1</option><option>M5</option><option>M15</option><option>H1</option></select>
+  <input class="vibe" id="vibePf" inputmode="decimal" value="1.2" aria-label="Target PF">
+  <input class="vibe" id="vibeDd" inputmode="decimal" value="5" aria-label="Max DD percent">
+</div>
+<button class="action" id="makeBrief" type="button" style="margin-top:9px">Research Briefを生成</button>
+<pre class="brief" id="briefOut">研究条件を入力してResearch Briefを生成します。</pre>
+<div class="grid">
+<a class="btn primary" href="https://github.com/Sai310421/research-line/actions/workflows/control-plane.yml">Cloud RUNへ</a>
+<a class="btn" href="https://github.com/Sai310421/research-line/blob/main/research/vibe/dashboard.html">Vibe本体コード</a>
+</div>
+<p class="note">Vibeは研究フロントエンド、Qlib/FinRLは研究・学習系、最終採点はNautilusです。未接続/未実行値は「—」で表示します。</p>
 </section>
 
 <section class="card">
@@ -125,7 +204,44 @@ ol{padding-left:20px;line-height:1.55}.note{font-size:12px;color:#a9b5ca;line-he
   const dz=document.getElementById('dropZone');
   dz?.addEventListener('dragover',e=>{e.preventDefault()});
   dz?.addEventListener('drop',e=>{e.preventDefault();chosen=[...e.dataTransfer.files];render()});
+  async function loadStack(){
+    try{
+      const r=await fetch('./status.json',{cache:'no-store'});
+      const d=await r.json();
+      const show=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=(v===null||v===undefined||v==='')?'—':String(v)};
+      show('qlibState',d.qlib?.state); show('qlibVersion',d.qlib?.version); show('qlibConnected',d.qlib?.connected?'YES':'NO'); show('qlibLast',d.qlib?.last_run); show('qlibCandidates',d.qlib?.candidates);
+      show('finrlState',d.finrl?.state); show('finrlVersion',d.finrl?.version); show('finrlConnected',d.finrl?.connected?'YES':'NO'); show('finrlLast',d.finrl?.last_run); show('finrlCandidates',d.finrl?.candidates);
+      show('vibeState',d.vibe?.state); show('vibeUi',d.vibe?.ui_present?'READY':'NO'); show('vibeRuntime',d.vibe?.connected?'CONNECTED':'NOT VENDORED'); show('vibeLast',d.vibe?.last_brief);
+      const n=d.nautilus||{};
+      const note=document.getElementById('stackNote');
+      if(note) note.textContent='Sanitized status · Nautilus Champion: '+(n.champion_state||'—')+' · PF '+(n.pf??'—')+' · MaxDD '+(n.max_dd_pct??'—')+'% · Promotion '+(n.promotion_eligible?'YES':'NO');
+    }catch(e){
+      const note=document.getElementById('stackNote'); if(note) note.textContent='status.json読込失敗';
+    }
+  }
+  const briefBtn=document.getElementById('makeBrief');
+  briefBtn?.addEventListener('click',()=>{
+    const prompt=(document.getElementById('vibePrompt')?.value||'').trim();
+    const symbol=document.getElementById('vibeSymbol')?.value||'XAUUSD';
+    const tf=document.getElementById('vibeTf')?.value||'M1';
+    const pf=Math.max(0,Number(document.getElementById('vibePf')?.value||1.2));
+    const dd=Math.max(0,Number(document.getElementById('vibeDd')?.value||5));
+    const out=document.getElementById('briefOut');
+    if(!prompt){out.textContent='研究テーマを入力してください。';return}
+    out.textContent=[
+      'Research-Line Vibe Brief',
+      'Symbol: '+symbol,
+      'TF: '+tf,
+      'Target PF: >= '+pf,
+      'Max DD: <= '+dd+'%',
+      'Prompt: '+prompt,
+      'Flow: Vibe -> Qlib -> RD-Agent -> FinRL -> Nautilus -> Gate',
+      'Rule: Qlib/FinRLの結果だけでは昇格させない。Nautilus KPIのみ正式採点。',
+      'Unknown KPI: N/Aとして扱い、推定値を実測値として表示しない。'
+    ].join('\n');
+  });
   render();
+  loadStack();
 })();
 </script>
 </body>
