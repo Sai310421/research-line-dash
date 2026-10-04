@@ -88,6 +88,8 @@ button.action{width:100%;min-height:48px;border-radius:11px;border:1px solid #31
   <div class="heroKpi"><span>Candidates</span><b id="topCandidates">—</b></div>
   <div class="heroKpi"><span>Qlib</span><b id="topQlib">—</b></div>
   <div class="heroKpi"><span>FinRL</span><b id="topFinrl">—</b></div>
+  <div class="heroKpi"><span>Valid KPI</span><b id="topValidKpi">—</b></div>
+  <div class="heroKpi"><span>Gate Accept</span><b id="topGateAccept">—</b></div>
 </div>
 <div class="note" id="lastUpdate">Last update: —</div>
 <div class="circuit">
@@ -155,7 +157,7 @@ button.action{width:100%;min-height:48px;border-radius:11px;border:1px solid #31
       <div class="kpi"><span>UI</span><b id="vibeUi">—</b></div>
       <div class="kpi"><span>Runtime</span><b id="vibeRuntime">—</b></div>
       <div class="kpi"><span>Last Brief</span><b id="vibeLast">—</b></div>
-      <div class="kpi"><span>Scorer</span><b>Nautilus</b></div>
+      <div class="kpi"><span>Candidates</span><b id="vibeCandidates">—</b></div>
     </div>
   </div>
 </div>
@@ -261,10 +263,10 @@ button.action{width:100%;min-height:48px;border-radius:11px;border:1px solid #31
       const show=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=(v===null||v===undefined||v==='')?'—':String(v)};
       show('qlibState',d.qlib?.state); show('qlibVersion',d.qlib?.version); show('qlibConnected',d.qlib?.connected?'YES':'NO'); show('qlibLast',d.qlib?.last_run); show('qlibCandidates',d.qlib?.candidates);
       show('finrlState',d.finrl?.state); show('finrlVersion',d.finrl?.version); show('finrlConnected',d.finrl?.connected?'YES':'NO'); show('finrlLast',d.finrl?.last_run); show('finrlCandidates',d.finrl?.candidates);
-      show('vibeState',d.vibe?.state); show('vibeUi',d.vibe?.ui_present?'READY':'NO'); show('vibeRuntime',d.vibe?.connected?'CONNECTED':'NOT VENDORED'); show('vibeLast',d.vibe?.last_brief);
+      show('vibeState',d.vibe?.state); show('vibeUi',d.vibe?.ui_present?'READY':'NO'); show('vibeRuntime',d.vibe?.connected?'CONNECTED':'NOT VENDORED'); show('vibeLast',d.vibe?.last_run||d.vibe?.last_brief); show('vibeCandidates',d.vibe?.candidates);
       const n=d.nautilus||{};
       const note=document.getElementById('stackNote');
-      if(note) note.textContent='Sanitized status · Nautilus Champion: '+(n.champion_state||'—')+' · PF '+(n.pf??'—')+' · MaxDD '+(n.max_dd_pct??'—')+'% · Promotion '+(n.promotion_eligible?'YES':'NO');
+      if(note) note.textContent='Sanitized status · Candidates '+(d.candidates?.count??'—')+' · Valid KPI '+(d.candidates?.valid_kpi??'—')+' · Gate '+(d.candidates?.gate_accept??'—')+' · Nautilus Champion '+(n.champion_state||'—')+' · PF '+(n.pf??'—')+' · MaxDD '+(n.max_dd_pct??'—')+'%';
       const set=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v};
       set('topPf',n.pf??'—'); set('topDd',(n.max_dd_pct??'—')+(n.max_dd_pct==null?'':'%'));
       const wr=n.wr;
@@ -272,6 +274,8 @@ button.action{width:100%;min-height:48px;border-radius:11px;border:1px solid #31
       set('topReturn',n.return_pct==null?'—':Number(n.return_pct).toFixed(2)+'%');
       set('topTrades',n.trades??'—');
       set('topCandidates',d.candidates?.count??'—');
+      set('topValidKpi',d.candidates?.valid_kpi??'—');
+      set('topGateAccept',d.candidates?.gate_accept??'—');
       set('topQlib',d.qlib?.connected?'ONLINE':'WAIT'); set('topFinrl',d.finrl?.connected?'ONLINE':'WAIT');
       const lu=document.getElementById('lastUpdate'); if(lu)lu.textContent='Last update: '+(d.updated_at||'—');
       set('agentState','Vibe '+(d.vibe?.ui_present?'READY':'WAIT')+' · Qlib '+(d.qlib?.connected?'ONLINE':'WAIT')+' · FinRL '+(d.finrl?.connected?'ONLINE':'WAIT')+' · Nautilus '+(n.authoritative?'SCORER':'WAIT'));
