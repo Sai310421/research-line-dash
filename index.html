@@ -82,9 +82,14 @@ button.action{width:100%;min-height:48px;border-radius:11px;border:1px solid #31
 <div class="heroKpis">
   <div class="heroKpi"><span>Champion PF</span><b id="topPf">—</b></div>
   <div class="heroKpi"><span>Max DD</span><b id="topDd">—</b></div>
+  <div class="heroKpi"><span>WR</span><b id="topWr">—</b></div>
+  <div class="heroKpi"><span>Return</span><b id="topReturn">—</b></div>
+  <div class="heroKpi"><span>Trades</span><b id="topTrades">—</b></div>
+  <div class="heroKpi"><span>Candidates</span><b id="topCandidates">—</b></div>
   <div class="heroKpi"><span>Qlib</span><b id="topQlib">—</b></div>
   <div class="heroKpi"><span>FinRL</span><b id="topFinrl">—</b></div>
 </div>
+<div class="note" id="lastUpdate">Last update: —</div>
 <div class="circuit">
   <div class="circuitBox"><b>Vibe-Trading</b><small>Research prompt</small></div>
   <div class="circuitBox"><b>Qlib / RD-Agent</b><small>Alpha & ML</small></div>
@@ -262,12 +267,18 @@ button.action{width:100%;min-height:48px;border-radius:11px;border:1px solid #31
       if(note) note.textContent='Sanitized status · Nautilus Champion: '+(n.champion_state||'—')+' · PF '+(n.pf??'—')+' · MaxDD '+(n.max_dd_pct??'—')+'% · Promotion '+(n.promotion_eligible?'YES':'NO');
       const set=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v};
       set('topPf',n.pf??'—'); set('topDd',(n.max_dd_pct??'—')+(n.max_dd_pct==null?'':'%'));
+      const wr=n.wr;
+      set('topWr',wr==null?'—':((Number(wr)<=1?Number(wr)*100:Number(wr)).toFixed(1)+'%'));
+      set('topReturn',n.return_pct==null?'—':Number(n.return_pct).toFixed(2)+'%');
+      set('topTrades',n.trades??'—');
+      set('topCandidates',d.candidates?.count??'—');
       set('topQlib',d.qlib?.connected?'ONLINE':'WAIT'); set('topFinrl',d.finrl?.connected?'ONLINE':'WAIT');
+      const lu=document.getElementById('lastUpdate'); if(lu)lu.textContent='Last update: '+(d.updated_at||'—');
       set('agentState','Vibe '+(d.vibe?.ui_present?'READY':'WAIT')+' · Qlib '+(d.qlib?.connected?'ONLINE':'WAIT')+' · FinRL '+(d.finrl?.connected?'ONLINE':'WAIT')+' · Nautilus '+(n.authoritative?'SCORER':'WAIT'));
       const logs=document.getElementById('liveLogs');
       if(logs) logs.innerHTML=[
         ['VIBE',d.vibe?.state||'—'],['QLIB',d.qlib?.state||'—'],['FINRL',d.finrl?.state||'—'],
-        ['NAUT', 'PF '+(n.pf??'—')+' / MaxDD '+(n.max_dd_pct??'—')+'% / '+(n.promotion_eligible?'PROMOTION READY':'NOT PROMOTED')]
+        ['NAUT', 'PF '+(n.pf??'—')+' / WR '+(n.wr??'—')+' / MaxDD '+(n.max_dd_pct??'—')+'% / Trades '+(n.trades??'—')+' / '+(n.promotion_eligible?'PROMOTION READY':'NOT PROMOTED')]
       ].map(x=>'<div class="logline"><span class="tag">'+x[0]+'</span><span>'+x[1]+'</span></div>').join('');
     }catch(e){
       const note=document.getElementById('stackNote'); if(note) note.textContent='status.json読込失敗';
