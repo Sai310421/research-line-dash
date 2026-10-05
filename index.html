@@ -63,13 +63,17 @@ button.action{width:100%;min-height:48px;border-radius:11px;border:1px solid #31
 .chatinput{width:100%;min-height:44px;border-radius:22px;border:1px solid #344361;background:#0c1424;color:#fff;padding:10px 14px;font-size:16px}
 @media(max-width:560px){.heroKpis{grid-template-columns:1fr 1fr}.circuit{grid-template-columns:1fr 1fr}}
 table{width:100%;border-collapse:collapse}td,th{padding:7px;border-bottom:1px solid #27324c;text-align:left}
+.moduleControls{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}
+.miniBtn{border:1px solid #3b4865;background:#11192a;color:#eef3ff;border-radius:9px;padding:7px 9px;font-size:11px;font-weight:750}
+.moduleOff{opacity:.42}
+
 </style>
 </head>
 <body>
 <main>
 <header>
 <h1>Research-Line Command Center</h1>
-<div class="muted">iPhone Command Center · Research → ML → RL → Nautilus · UI v2026.10.06.2</div>
+<div class="muted">iPhone Command Center · Research → ML → RL → Nautilus · UI v2026.10.06.3</div>
 </header>
 
 <section class="card">
@@ -139,6 +143,10 @@ table{width:100%;border-collapse:collapse}td,th{padding:7px;border-bottom:1px so
 </div>
 <div class="sysgrid" id="coreModules">
   <div class="sys"><h3>Core Modules</h3><div class="state">LOADING</div></div>
+</div>
+<div class="grid" style="margin-top:10px">
+  <button class="btn" id="refreshCoreBtn" type="button">Core状態を更新</button>
+  <button class="btn" id="resetModulesBtn" type="button">モジュール配置を初期化</button>
 </div>
 <p class="note" id="coreNote">Single Control Core → Distributed Workers</p>
 </section>
@@ -330,6 +338,16 @@ table{width:100%;border-collapse:collapse}td,th{padding:7px;border-bottom:1px so
     if(!r.ok) throw new Error(j.detail||j.error||('HTTP '+r.status));
     return j;
   }
+  function modulePrefs(){
+    let order=[]; let hidden=[];
+    try{order=JSON.parse(localStorage.getItem('researchLineModuleOrder')||'[]')}catch{}
+    try{hidden=JSON.parse(localStorage.getItem('researchLineModuleHidden')||'[]')}catch{}
+    return {order:Array.isArray(order)?order:[],hidden:Array.isArray(hidden)?hidden:[]};
+  }
+  function saveModulePrefs(order,hidden){
+    localStorage.setItem('researchLineModuleOrder',JSON.stringify(order));
+    localStorage.setItem('researchLineModuleHidden',JSON.stringify(hidden));
+  }
   async function loadCoreState(){
     const d=await controlCall('/api/v2/state');
     const set=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v};
@@ -338,11 +356,57 @@ table{width:100%;border-collapse:collapse}td,th{padding:7px;border-bottom:1px so
     set('coreActive',String(d.queue?.active?.length??0));
     const bytes=d.state?.r2?.bytes;
     set('coreR2',bytes==null?'—':(bytes/1024/1024).toFixed(1)+' MB');
+
+    const prefs=modulePrefs();
+    const source=[...(d.modules||[])];
+    const ids=source.map(m=>m.id);
+    const order=[...prefs.order.filter(id=>ids.includes(id)),...ids.filter(id=>!prefs.order.includes(id))];
+    const map=Object.fromEntries(source.map(m=>[m.id,m]));
     const box=document.getElementById('coreModules');
     if(box){
-      box.innerHTML=(d.modules||[]).map(m=>
-        '<div class="sys"><h3>'+m.label+'</h3><div class="state">'+m.state+'</div><div class="note">'+(m.detail||'—')+'</div></div>'
-      ).join('');
+      box.innerHTML=order.map((id,idx)=>{
+        const m=map[id]; if(!m)return '';
+        const hidden=prefs.hidden.includes(id);
+        const q=d.queue?.by_module?.[id]||{};
+        return '<div class="sys '+(hidden?'moduleOff':'')+'" data-module="'+id+'">'+
+          '<h3>'+m.label+'</h3>'+
+          '<div class="state">'+m.state+'</div>'+
+          '<div class="note">'+(m.detail||'—')+' · active '+(q.active||0)+' · failed '+(q.failed||0)+'</div>'+
+          '<div class="moduleControls">'+
+            (m.runnable?'<button class="miniBtn" data-act="run" data-id="'+id+'">RUN</button>':'')+
+            '<button class="miniBtn" data-act="up" data-id="'+id+'">↑</button>'+
+            '<button class="miniBtn" data-act="down" data-id="'+id+'">↓</button>'+
+            '<button class="miniBtn" data-act="toggle" data-id="'+id+'">'+(hidden?'表示ON':'表示OFF')+'</button>'+
+          '</div>'+
+        '</div>';
+      }).join('');
+
+      box.querySelectorAll('[data-act]').forEach(btn=>btn.addEventListener('click',async()=>{
+        const id=btn.dataset.id; const act=btn.dataset.act;
+        const p=modulePrefs();
+        const current=[...order];
+        if(act==='run'){
+          const out=document.getElementById('controlOut');
+          try{
+            const r=await coreCommand('module.run',{module:id,symbol:document.getElementById('vibeSymbol')?.value||'XAUUSD',bar:document.getElementById('vibeTf')?.value||'M1'});
+            if(out)out.textContent=id+' RUN accepted\n'+JSON.stringify(r,null,2);
+            setTimeout(()=>loadCoreState().catch(()=>{}),1200);
+          }catch(e){if(out)out.textContent=id+' RUN failed: '+e.message}
+          return;
+        }
+        if(act==='up'||act==='down'){
+          const i=current.indexOf(id);
+          const j=act==='up'?i-1:i+1;
+          if(i>=0&&j>=0&&j<current.length){[current[i],current[j]]=[current[j],current[i]]}
+          saveModulePrefs(current,p.hidden);
+        }
+        if(act==='toggle'){
+          const hidden=new Set(p.hidden);
+          hidden.has(id)?hidden.delete(id):hidden.add(id);
+          saveModulePrefs(current,[...hidden]);
+        }
+        await loadCoreState();
+      }));
     }
     const note=document.getElementById('coreNote');
     if(note) note.textContent='Core '+(d.core?.version||'—')+' · '+(d.core?.architecture||'—')+' · adapters: '+Object.entries(d.adapters||{}).map(([k,v])=>k+'='+v).join(' / ');
@@ -549,6 +613,15 @@ table{width:100%;border-collapse:collapse}td,th{padding:7px;border-bottom:1px so
     document.getElementById('makeBrief')?.click();
     document.getElementById('briefOut')?.scrollIntoView({behavior:'smooth',block:'center'});
   });
+  document.getElementById('refreshCoreBtn')?.addEventListener('click',()=>loadCoreState().catch(e=>{
+    const out=document.getElementById('controlOut');if(out)out.textContent='Core更新失敗: '+e.message;
+  }));
+  document.getElementById('resetModulesBtn')?.addEventListener('click',()=>{
+    localStorage.removeItem('researchLineModuleOrder');
+    localStorage.removeItem('researchLineModuleHidden');
+    loadCoreState().catch(()=>{});
+  });
+
   document.getElementById('worldRunBtn')?.addEventListener('click',async()=>{
     const out=document.getElementById('worldControlOut');
     try{
