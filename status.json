@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-05T00:56:38.017765+00:00",
+  "updated_at": "2026-10-05T01:20:27.987870+00:00",
   "source": "Sai310421/research-line@main",
   "qlib": {
     "version": "0.9.7",
@@ -60,6 +60,102 @@
     "dataset": "research/loop/training/xauusd_m1.csv",
     "train_rows": 259,
     "oos_rows": 140
+  },
+  "world_monitor": {
+    "updated_at": "2026-10-05T01:20:27.928169+00:00",
+    "current_state": "CRISIS",
+    "next_state": "CRISIS",
+    "eta_hours": 24.0,
+    "horizon_start": "2026-10-05T13:20:27.928169+00:00",
+    "horizon_end": "2026-10-06T13:20:27.928169+00:00",
+    "confidence": 0.9,
+    "reasons": [
+      "geopolitics: High-severity signal: war (score=1.00)",
+      "macro: Watch signal: inflation (score=1.00)",
+      "shipping: Watch signal: red sea (score=1.00)"
+    ],
+    "invalidation_conditions": [
+      "Top-risk dimension score falls below 0.30 before horizon",
+      "Independent confirmation is absent for the leading driver",
+      "Ceasefire/policy reversal or infrastructure normalization materially changes the driver"
+    ],
+    "dimensions": {
+      "geopolitics": {
+        "score": 1.0,
+        "state": "CRISIS",
+        "reasons": [
+          "High-severity signal: war",
+          "High-severity signal: missile",
+          "Watch signal: tension",
+          "High-severity signal: war",
+          "Watch signal: tension",
+          "Watch signal: tension"
+        ]
+      },
+      "macro": {
+        "score": 1.0,
+        "state": "CRISIS",
+        "reasons": [
+          "Watch signal: inflation",
+          "High-severity signal: default",
+          "High-severity signal: default",
+          "High-severity signal: default"
+        ]
+      },
+      "energy": {
+        "score": 0.34,
+        "state": "WATCH",
+        "reasons": [
+          "High-severity signal: embargo"
+        ]
+      },
+      "shipping": {
+        "score": 1.0,
+        "state": "CRISIS",
+        "reasons": [
+          "Watch signal: red sea",
+          "Watch signal: red sea",
+          "High-severity signal: blockade",
+          "Watch signal: red sea",
+          "High-severity signal: blockade",
+          "Watch signal: red sea"
+        ]
+      },
+      "cyber": {
+        "score": 1.0,
+        "state": "CRISIS",
+        "reasons": [
+          "Watch signal: cyberattack",
+          "Watch signal: ransomware",
+          "Watch signal: ransomware",
+          "Watch signal: cyberattack",
+          "Watch signal: cyberattack",
+          "Watch signal: cyberattack"
+        ]
+      },
+      "market_stress": {
+        "score": 0.15,
+        "state": "CALM",
+        "reasons": [
+          "Watch signal: credit spread"
+        ]
+      }
+    },
+    "expected_market_effects": {
+      "XAUUSD": "Risk premium tends to rise as STRESS/CRISIS probability rises; direction must still be confirmed by market structure.",
+      "USDJPY": "Safe-haven and yield effects may conflict; use as context, not a direct trade signal.",
+      "OIL": "Energy/shipping escalation raises upside-tail risk; reversal risk rises if supply disruption is disproved.",
+      "EQUITY": "Higher stress generally raises downside/volatility risk; confirmation required."
+    },
+    "latest_forecast_id": "20650006223adc22",
+    "verification": {
+      "verified": 0,
+      "hit": 0,
+      "partial": 0,
+      "miss": 0,
+      "weighted_accuracy": null
+    },
+    "matured_this_run": []
   },
   "nautilus": {
     "authoritative": true,
