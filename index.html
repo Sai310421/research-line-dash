@@ -73,7 +73,7 @@ table{width:100%;border-collapse:collapse}td,th{padding:7px;border-bottom:1px so
 <main>
 <header>
 <h1>Research-Line Command Center</h1>
-<div class="muted">iPhone Command Center · Research → ML → RL → Nautilus · UI v2026.10.06.3</div>
+<div class="muted">iPhone Command Center · Research → ML → RL → Nautilus · UI v2026.10.06.4</div>
 </header>
 
 <section class="card">
@@ -143,6 +143,10 @@ table{width:100%;border-collapse:collapse}td,th{padding:7px;border-bottom:1px so
 </div>
 <div class="sysgrid" id="coreModules">
   <div class="sys"><h3>Core Modules</h3><div class="state">LOADING</div></div>
+</div>
+<h3 style="font-size:14px;margin:14px 0 7px">Adapters</h3>
+<div class="sysgrid" id="adapterGrid">
+  <div class="sys"><h3>Adapters</h3><div class="state">LOADING</div></div>
 </div>
 <div class="grid" style="margin-top:10px">
   <button class="btn" id="refreshCoreBtn" type="button">Core状態を更新</button>
@@ -338,6 +342,9 @@ table{width:100%;border-collapse:collapse}td,th{padding:7px;border-bottom:1px so
     if(!r.ok) throw new Error(j.detail||j.error||('HTTP '+r.status));
     return j;
   }
+  let coreSnapshotId='';
+  let corePollTimer=null;
+
   function modulePrefs(){
     let order=[]; let hidden=[];
     try{order=JSON.parse(localStorage.getItem('researchLineModuleOrder')||'[]')}catch{}
@@ -348,8 +355,8 @@ table{width:100%;border-collapse:collapse}td,th{padding:7px;border-bottom:1px so
     localStorage.setItem('researchLineModuleOrder',JSON.stringify(order));
     localStorage.setItem('researchLineModuleHidden',JSON.stringify(hidden));
   }
-  async function loadCoreState(){
-    const d=await controlCall('/api/v2/state');
+  async function loadCoreState(useOverride=false){
+    const d=(useOverride && window.__researchLineCoreOverride) ? window.__researchLineCoreOverride : await controlCall('/api/v2/state');
     const set=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v};
     set('coreVersion',d.core?.version||'—');
     set('coreArch','Core v2');
@@ -408,10 +415,35 @@ table{width:100%;border-collapse:collapse}td,th{padding:7px;border-bottom:1px so
         await loadCoreState();
       }));
     }
+    coreSnapshotId=d.snapshot_id||coreSnapshotId;
+    const adapterGrid=document.getElementById('adapterGrid');
+    if(adapterGrid){
+      adapterGrid.innerHTML=Object.entries(d.adapters||{}).map(([id,a])=>
+        '<div class="sys"><h3>'+(a.label||id)+'</h3><div class="state">'+(a.state||'—')+'</div><div class="note">'+(a.kind||'—')+' · '+((a.capabilities||[]).join(' / ')||'—')+'</div></div>'
+      ).join('');
+    }
     const note=document.getElementById('coreNote');
-    if(note) note.textContent='Core '+(d.core?.version||'—')+' · '+(d.core?.architecture||'—')+' · adapters: '+Object.entries(d.adapters||{}).map(([k,v])=>k+'='+v).join(' / ');
+    if(note) note.textContent='Core '+(d.core?.version||'—')+' · '+(d.core?.architecture||'—')+' · snapshot '+(d.snapshot_id||'—')+' · cache '+(d.transport?.cache_hit?'HIT':'MISS');
     return d;
   }
+  async function pollCoreDelta(){
+    if(document.hidden || !controlKeyValue()) return;
+    try{
+      const q=coreSnapshotId?('?since='+encodeURIComponent(coreSnapshotId)):'';
+      const e=await controlCall('/api/v2/events'+q);
+      if(e.changed && e.state){
+        await renderCoreStatePayload(e.state);
+      }
+    }catch{}
+  }
+
+  async function renderCoreStatePayload(d){
+    // Reuse the existing renderer without another network request.
+    const original=window.__researchLineCoreOverride;
+    window.__researchLineCoreOverride=d;
+    try{return await loadCoreState(true)}finally{window.__researchLineCoreOverride=original}
+  }
+
   async function coreCommand(command,payload={}){
     return controlCall('/api/v2/command',{method:'POST',body:JSON.stringify({command,payload})});
   }
@@ -425,6 +457,8 @@ table{width:100%;border-collapse:collapse}td,th{padding:7px;border-bottom:1px so
     localStorage.setItem('researchLineControlApi',(apiInput?.value||'').trim().replace(/\/$/,''));
     localStorage.setItem('researchLineControlKey',(keyInput?.value||'').trim());
     if(controlState) controlState.textContent='接続設定を保存しました。';
+    coreSnapshotId='';
+    loadCoreState().catch(()=>{});
   });
   document.getElementById('testControl')?.addEventListener('click',async()=>{
     try{await controlCall('/api/github/health');await loadCoreState();if(controlState)controlState.textContent='ONLINE · Core v2接続OK';}
@@ -641,8 +675,17 @@ table{width:100%;border-collapse:collapse}td,th{padding:7px;border-bottom:1px so
   });
   document.getElementById('bottomRetryBtn')?.addEventListener('click',()=>document.getElementById('retryLatestBtn')?.click());
 
+  function startCorePolling(){
+    if(corePollTimer) clearInterval(corePollTimer);
+    corePollTimer=setInterval(()=>pollCoreDelta(),30000);
+  }
+  document.addEventListener('visibilitychange',()=>{
+    if(!document.hidden) pollCoreDelta();
+  });
+
   loadStack();
   if(controlKeyValue()) loadCoreState().catch(()=>{});
+  startCorePolling();
 })();
 </script>
 </body>
