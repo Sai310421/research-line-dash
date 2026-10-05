@@ -73,7 +73,7 @@ table{width:100%;border-collapse:collapse}td,th{padding:7px;border-bottom:1px so
 <main>
 <header>
 <h1>Research-Line Command Center</h1>
-<div class="muted">iPhone Command Center · Research → ML → RL → Nautilus · UI v2026.10.06.4</div>
+<div class="muted">iPhone Command Center · Research → ML → RL → Nautilus · UI v2026.10.06.5</div>
 </header>
 
 <section class="card">
@@ -424,6 +424,7 @@ table{width:100%;border-collapse:collapse}td,th{padding:7px;border-bottom:1px so
     }
     const note=document.getElementById('coreNote');
     if(note) note.textContent='Core '+(d.core?.version||'—')+' · '+(d.core?.architecture||'—')+' · snapshot '+(d.snapshot_id||'—')+' · cache '+(d.transport?.cache_hit?'HIT':'MISS');
+    if(d.state?.public_status) await loadStack(d.state.public_status);
     return d;
   }
   async function pollCoreDelta(){
@@ -558,10 +559,13 @@ table{width:100%;border-collapse:collapse}td,th{padding:7px;border-bottom:1px so
     try{const r=await controlCall('/api/intake');if(st)st.textContent=JSON.stringify((r.items||[]).slice(0,20),null,2);}
     catch(e){if(st)st.textContent=e.message}
   });
-  async function loadStack(){
+  async function loadStack(dataOverride=null){
     try{
-      const r=await fetch('./status.json',{cache:'no-store'});
-      const d=await r.json();
+      let d=dataOverride;
+      if(!d){
+        const r=await fetch('./status.json',{cache:'no-store'});
+        d=await r.json();
+      }
       const show=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=(v===null||v===undefined||v==='')?'—':String(v)};
       show('qlibState',d.qlib?.state); show('qlibVersion',d.qlib?.version); show('qlibConnected',d.qlib?.connected?'YES':'NO'); show('qlibLast',d.qlib?.last_run); show('qlibCandidates',d.qlib?.candidates);
       show('finrlState',d.finrl?.state); show('finrlVersion',d.finrl?.version); show('finrlConnected',d.finrl?.connected?'YES':'NO'); show('finrlLast',d.finrl?.last_run); show('finrlCandidates',d.finrl?.candidates);
@@ -683,8 +687,11 @@ table{width:100%;border-collapse:collapse}td,th{padding:7px;border-bottom:1px so
     if(!document.hidden) pollCoreDelta();
   });
 
-  loadStack();
-  if(controlKeyValue()) loadCoreState().catch(()=>{});
+  if(controlKeyValue()){
+    loadCoreState().catch(()=>loadStack());
+  }else{
+    loadStack();
+  }
   startCorePolling();
 })();
 </script>
