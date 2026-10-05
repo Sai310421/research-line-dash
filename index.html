@@ -116,16 +116,16 @@ table{width:100%;border-collapse:collapse}td,th{padding:7px;border-bottom:1px so
 </section>
 
 <section class="card">
-<h2 style="font-size:16px;margin-top:0">Private Control 接続</h2>
+<h2 style="font-size:16px;margin-top:0">Cloud Control 接続</h2>
 <div class="vibegrid">
-  <input class="vibe" id="controlApiUrl" placeholder="https://your-mini-pc.tailnet.ts.net">
+  <input class="vibe" id="controlApiUrl" placeholder="https://research-line-control-api.<your-subdomain>.workers.dev">
   <input class="vibe" id="controlKey" type="password" placeholder="Control Key">
 </div>
 <div class="grid" style="margin-top:8px">
   <button class="btn primary" id="saveControl" type="button">接続を保存</button>
   <button class="btn" id="testControl" type="button">接続テスト</button>
 </div>
-<p class="note" id="controlState">未接続。iPhoneとmini-PCを同じTailscaleへ接続してください。</p>
+<p class="note" id="controlState">未接続。Cloud Control URLとControl Keyを設定してください。PCは不要です。</p>
 </section>
 
 <section class="card">
@@ -273,7 +273,7 @@ table{width:100%;border-collapse:collapse}td,th{padding:7px;border-bottom:1px so
     <button class="btn" type="button" id="refreshInboxBtn">Inboxを確認</button>
   </div>
   <pre class="brief" id="uploadStatus">ファイル未選択。</pre>
-  <div class="attachhint">750KB以下はPrivate Repoへ直接保存、大きいファイルはPrivate Control Planeのstagingへ送ります。GitHub画面は開きません。</div>
+  <div class="attachhint">750KB以下はPrivate Repoへ直接保存、大きいファイルはCloudflare R2へ送ります。GitHub画面もPCも不要です。</div>
 </div>
 </section>
 
@@ -306,7 +306,7 @@ table{width:100%;border-collapse:collapse}td,th{padding:7px;border-bottom:1px so
   function controlKeyValue(){return localStorage.getItem('researchLineControlKey')||''}
   async function controlCall(path,opt={}){
     const base=apiBase();
-    if(!base) throw new Error('Private Control接続を設定してください');
+    if(!base) throw new Error('Cloud Control接続を設定してください');
     const headers={...(opt.headers||{}),'X-Control-Key':controlKeyValue()};
     if(opt.body && !(opt.body instanceof Blob) && !(opt.body instanceof ArrayBuffer) && !headers['Content-Type']) headers['Content-Type']='application/json';
     const r=await fetch(base+path,{...opt,headers});
@@ -325,7 +325,7 @@ table{width:100%;border-collapse:collapse}td,th{padding:7px;border-bottom:1px so
     if(controlState) controlState.textContent='接続設定を保存しました。';
   });
   document.getElementById('testControl')?.addEventListener('click',async()=>{
-    try{await controlCall('/api/github/health');if(controlState)controlState.textContent='ONLINE · Private Control接続OK';}
+    try{await controlCall('/api/github/health');if(controlState)controlState.textContent='ONLINE · Cloud Control接続OK';}
     catch(e){if(controlState)controlState.textContent='接続失敗: '+e.message}
   });
   async function loadRemoteRuns(){
@@ -396,8 +396,8 @@ table{width:100%;border-collapse:collapse}td,th{padding:7px;border-bottom:1px so
           const r=await controlCall('/api/github/upload',{method:'POST',body:JSON.stringify({name:f.name,content_base64:b64})});
           results.push({name:f.name,status:'保存済み',path:r.path});
         }else{
-          const r=await controlCall('/api/drive/upload',{method:'POST',headers:{'X-File-Name':f.name,'Content-Type':'application/octet-stream'},body:f});
-          results.push({name:f.name,status:'staged',sha256:r.sha256,size:r.size});
+          const r=await controlCall('/api/object/upload',{method:'POST',headers:{'X-File-Name':f.name,'Content-Type':f.type||'application/octet-stream'},body:f});
+          results.push({name:f.name,status:'R2保存済み',object_key:r.object_key,size:r.size});
         }
       }catch(e){results.push({name:f.name,status:'失敗',error:e.message})}
     }
