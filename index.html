@@ -62,6 +62,7 @@ button.action{width:100%;min-height:48px;border-radius:11px;border:1px solid #31
 .chatplus,.chatrun{min-width:44px;height:44px;border-radius:50%;border:1px solid #3b4865;background:#11192a;color:#fff;font-weight:800}
 .chatinput{width:100%;min-height:44px;border-radius:22px;border:1px solid #344361;background:#0c1424;color:#fff;padding:10px 14px;font-size:16px}
 @media(max-width:560px){.heroKpis{grid-template-columns:1fr 1fr}.circuit{grid-template-columns:1fr 1fr}}
+table{width:100%;border-collapse:collapse}td,th{padding:7px;border-bottom:1px solid #27324c;text-align:left}
 </style>
 </head>
 <body>
@@ -115,15 +116,30 @@ button.action{width:100%;min-height:48px;border-radius:11px;border:1px solid #31
 </section>
 
 <section class="card">
+<h2 style="font-size:16px;margin-top:0">Private Control 接続</h2>
+<div class="vibegrid">
+  <input class="vibe" id="controlApiUrl" placeholder="https://your-mini-pc.tailnet.ts.net">
+  <input class="vibe" id="controlKey" type="password" placeholder="Control Key">
+</div>
+<div class="grid" style="margin-top:8px">
+  <button class="btn primary" id="saveControl" type="button">接続を保存</button>
+  <button class="btn" id="testControl" type="button">接続テスト</button>
+</div>
+<p class="note" id="controlState">未接続。iPhoneとmini-PCを同じTailscaleへ接続してください。</p>
+</section>
+
+<section class="card">
 <h2 style="font-size:16px;margin-top:0">操作</h2>
 <div class="grid">
-<a class="btn primary" href="https://github.com/Sai310421/research-line/actions/workflows/control-plane.yml">Cloud RUN</a>
-<a class="btn" href="https://github.com/Sai310421/research-line/actions">実行状況</a>
-<a class="btn" href="https://github.com/Sai310421/research-line/blob/main/research/loop/cloud_champion.json">Cloud Champion</a>
-<a class="btn" href="https://github.com/Sai310421/research-line/tree/main/research/lineage/runs">Run履歴</a>
-<a class="btn" href="https://github.com/Sai310421/research-line/actions/workflows/cloud-runtime-smoke.yml">Runtime Smoke</a>
-<a class="btn" href="https://github.com/Sai310421/research-line">Research-Line</a>
+  <button class="btn primary" id="cloudRunBtn" type="button">Cloud RUN</button>
+  <button class="btn" id="refreshRunsBtn" type="button">実行状況を更新</button>
+  <button class="btn" id="championBtn" type="button">Cloud Champion</button>
+  <button class="btn" id="historyBtn" type="button">Run履歴</button>
+  <button class="btn" id="retryLatestBtn" type="button">最新失敗RunをRETRY</button>
+  <button class="btn warn" id="stopLatestBtn" type="button">実行中RunをSTOP</button>
 </div>
+<pre class="brief" id="controlOut">Dashboard内で操作します。</pre>
+<div style="overflow:auto;margin-top:8px"><table style="width:100%;font-size:12px"><thead><tr><th>Run</th><th>Status</th><th>Result</th></tr></thead><tbody id="runTable"></tbody></table></div>
 </section>
 
 
@@ -243,18 +259,21 @@ button.action{width:100%;min-height:48px;border-radius:11px;border:1px solid #31
 <section class="card">
 <h2 style="font-size:16px;margin-top:0">ファイル添付</h2>
 <div class="attachbox">
-  <a class="attachrow" href="https://github.com/Sai310421/research-line/upload/main/research/inbox" style="text-decoration:none;color:inherit">
+  <label class="attachrow" for="dashboardFiles" style="cursor:pointer">
     <span class="attachplus" aria-hidden="true">＋</span>
     <span class="attachtext">
       <b>ファイルを添付</b>
       <span>ZIP・画像・PDF・MQ4/MQ5・CSV・Python・動画など</span>
     </span>
-  </a>
+  </label>
+  <input class="hiddenfile" id="dashboardFiles" type="file" multiple accept=".zip,.png,.jpg,.jpeg,.webp,.pdf,.mq4,.mq5,.csv,.json,.txt,.py,.ipynb,.mp4,.mov,.m4v,.avi">
+  <div class="filechips" id="dashboardFileChips"></div>
   <div class="attachactions">
-    <a class="btn primary" href="https://github.com/Sai310421/research-line/upload/main/research/inbox">ファイルを選ぶ</a>
-    <a class="btn" href="https://github.com/Sai310421/research-line/tree/main/research/inbox">Inboxを確認</a>
+    <button class="btn primary" type="button" id="uploadDashboardFiles">Dashboardから送信</button>
+    <button class="btn" type="button" id="refreshInboxBtn">Inboxを確認</button>
   </div>
-  <div class="attachhint">タップするとPrivate Repoの認証済みアップロード画面へ進みます。そこで「choose your files」→「Commit changes」で保存します。</div>
+  <pre class="brief" id="uploadStatus">ファイル未選択。</pre>
+  <div class="attachhint">750KB以下はPrivate Repoへ直接保存、大きいファイルはPrivate Control Planeのstagingへ送ります。GitHub画面は開きません。</div>
 </div>
 </section>
 
@@ -283,6 +302,112 @@ button.action{width:100%;min-height:48px;border-radius:11px;border:1px solid #31
 </main>
 <script>
 (()=>{
+  function apiBase(){return (localStorage.getItem('researchLineControlApi')||'').replace(/\/$/,'')}
+  function controlKeyValue(){return localStorage.getItem('researchLineControlKey')||''}
+  async function controlCall(path,opt={}){
+    const base=apiBase();
+    if(!base) throw new Error('Private Control接続を設定してください');
+    const headers={...(opt.headers||{}),'X-Control-Key':controlKeyValue()};
+    if(opt.body && !(opt.body instanceof Blob) && !(opt.body instanceof ArrayBuffer) && !headers['Content-Type']) headers['Content-Type']='application/json';
+    const r=await fetch(base+path,{...opt,headers});
+    const j=await r.json().catch(()=>({}));
+    if(!r.ok) throw new Error(j.detail||j.error||('HTTP '+r.status));
+    return j;
+  }
+  const apiInput=document.getElementById('controlApiUrl');
+  const keyInput=document.getElementById('controlKey');
+  const controlState=document.getElementById('controlState');
+  if(apiInput) apiInput.value=localStorage.getItem('researchLineControlApi')||'';
+  if(keyInput) keyInput.value=localStorage.getItem('researchLineControlKey')||'';
+  document.getElementById('saveControl')?.addEventListener('click',()=>{
+    localStorage.setItem('researchLineControlApi',(apiInput?.value||'').trim().replace(/\/$/,''));
+    localStorage.setItem('researchLineControlKey',(keyInput?.value||'').trim());
+    if(controlState) controlState.textContent='接続設定を保存しました。';
+  });
+  document.getElementById('testControl')?.addEventListener('click',async()=>{
+    try{await controlCall('/api/github/health');if(controlState)controlState.textContent='ONLINE · Private Control接続OK';}
+    catch(e){if(controlState)controlState.textContent='接続失敗: '+e.message}
+  });
+  async function loadRemoteRuns(){
+    const d=await controlCall('/api/github/runs');
+    const rows=d.runs||[];
+    const tb=document.getElementById('runTable');
+    if(tb) tb.innerHTML=rows.slice(0,10).map(r=>'<tr><td>#'+r.run_number+'</td><td>'+r.status+'</td><td>'+(r.conclusion||'—')+'</td></tr>').join('');
+    return rows;
+  }
+  document.getElementById('cloudRunBtn')?.addEventListener('click',async()=>{
+    const out=document.getElementById('controlOut');
+    try{
+      const body={mode:'cloud',kind:'source',source:'research/nautilus/backtest.py',bar:'M1',symbol:'XAUUSD'};
+      const r=await controlCall('/api/github/dispatch',{method:'POST',body:JSON.stringify(body)});
+      if(out) out.textContent=JSON.stringify(r,null,2);
+      setTimeout(()=>loadRemoteRuns().catch(()=>{}),1500);
+    }catch(e){if(out)out.textContent=e.message}
+  });
+  document.getElementById('refreshRunsBtn')?.addEventListener('click',async()=>{
+    const out=document.getElementById('controlOut');
+    try{const rows=await loadRemoteRuns();if(out)out.textContent='Run '+rows.length+'件を取得しました。';}
+    catch(e){if(out)out.textContent=e.message}
+  });
+  document.getElementById('championBtn')?.addEventListener('click',async()=>{
+    const out=document.getElementById('controlOut');
+    try{const r=await controlCall('/api/status');if(out)out.textContent=JSON.stringify(r.champions?.cloud||r.champion||{},null,2);}
+    catch(e){if(out)out.textContent=e.message}
+  });
+  document.getElementById('historyBtn')?.addEventListener('click',async()=>{
+    const out=document.getElementById('controlOut');
+    try{const r=await controlCall('/api/runs');if(out)out.textContent=JSON.stringify(r.slice?.(0,20)||r,null,2);}
+    catch(e){if(out)out.textContent=e.message}
+  });
+  document.getElementById('retryLatestBtn')?.addEventListener('click',async()=>{
+    const out=document.getElementById('controlOut');
+    try{
+      const rows=await loadRemoteRuns();const x=rows.find(r=>r.conclusion==='failure');
+      if(!x) throw new Error('失敗Runがありません');
+      await controlCall('/api/github/run-action',{method:'POST',body:JSON.stringify({run_id:x.id,action:'rerun'})});
+      if(out)out.textContent='#'+x.run_number+' をRETRYしました。';
+    }catch(e){if(out)out.textContent=e.message}
+  });
+  document.getElementById('stopLatestBtn')?.addEventListener('click',async()=>{
+    const out=document.getElementById('controlOut');
+    try{
+      const rows=await loadRemoteRuns();const x=rows.find(r=>r.status==='in_progress'||r.status==='queued');
+      if(!x) throw new Error('実行中Runがありません');
+      await controlCall('/api/github/run-action',{method:'POST',body:JSON.stringify({run_id:x.id,action:'cancel'})});
+      if(out)out.textContent='#'+x.run_number+' をSTOPしました。';
+    }catch(e){if(out)out.textContent=e.message}
+  });
+  const dashFiles=document.getElementById('dashboardFiles');
+  const fileChips=document.getElementById('dashboardFileChips');
+  dashFiles?.addEventListener('change',()=>{
+    const files=[...(dashFiles.files||[])];
+    if(fileChips) fileChips.innerHTML=files.map(f=>'<div class="filechip"><span class="name">'+f.name+'</span></div>').join('');
+    const st=document.getElementById('uploadStatus');if(st)st.textContent=files.length+'件選択済み';
+  });
+  function fileToB64(file){return new Promise((ok,ng)=>{const r=new FileReader();r.onload=()=>ok(String(r.result).split(',')[1]);r.onerror=ng;r.readAsDataURL(file)})}
+  document.getElementById('uploadDashboardFiles')?.addEventListener('click',async()=>{
+    const st=document.getElementById('uploadStatus');const files=[...(dashFiles?.files||[])];
+    if(!files.length){if(st)st.textContent='ファイルを選択してください。';return}
+    const results=[];
+    for(const f of files){
+      try{
+        if(f.size<=750000){
+          const b64=await fileToB64(f);
+          const r=await controlCall('/api/github/upload',{method:'POST',body:JSON.stringify({name:f.name,content_base64:b64})});
+          results.push({name:f.name,status:'保存済み',path:r.path});
+        }else{
+          const r=await controlCall('/api/drive/upload',{method:'POST',headers:{'X-File-Name':f.name,'Content-Type':'application/octet-stream'},body:f});
+          results.push({name:f.name,status:'staged',sha256:r.sha256,size:r.size});
+        }
+      }catch(e){results.push({name:f.name,status:'失敗',error:e.message})}
+    }
+    if(st)st.textContent=JSON.stringify(results,null,2);
+  });
+  document.getElementById('refreshInboxBtn')?.addEventListener('click',async()=>{
+    const st=document.getElementById('uploadStatus');
+    try{const r=await controlCall('/api/intake');if(st)st.textContent=JSON.stringify((r.items||[]).slice(0,20),null,2);}
+    catch(e){if(st)st.textContent=e.message}
+  });
   async function loadStack(){
     try{
       const r=await fetch('./status.json',{cache:'no-store'});
