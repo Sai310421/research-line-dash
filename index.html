@@ -76,8 +76,22 @@ table{width:100%;border-collapse:collapse}td,th{padding:7px;border-bottom:1px so
 <main>
 <header>
 <h1>Research-Line Command Center</h1>
-<div class="muted">iPhone Command Center · Research → ML → RL → Nautilus · UI v2026.10.06.7</div>
+<div class="muted">iPhone Command Center · Research → ML → RL → Nautilus · UI v2026.10.06.8</div>
 </header>
+
+<section class="card" id="agentTopCard">
+<h2 style="font-size:16px;margin-top:0">Research-Line Agent</h2>
+<p class="note">自然言語でDashboardを操作できます。例：XAUUSD M1でNautilus / 世界情勢更新 / 状態教えて / 失敗Runを再実行</p>
+<div class="chatbar">
+  <button class="chatplus" type="button" id="chatAttach">＋</button>
+  <input class="chatinput" id="quickPrompt" placeholder="例：XAUUSD M1でNautilus / 状態教えて">
+  <button class="chatrun" type="button" id="quickRun">→</button>
+</div>
+<div class="agentTranscript" id="agentTranscript">
+  <div class="agentMsg"><b>Agent</b>常駐中。自然言語でDashboardを操作できます。</div>
+</div>
+</section>
+
 
 <section class="card">
 <div class="pills">
@@ -116,14 +130,7 @@ table{width:100%;border-collapse:collapse}td,th{padding:7px;border-bottom:1px so
   <div class="logline"><span class="tag">BOOT</span><span>Research-Line Dashboard ready.</span></div>
   <div class="logline"><span class="tag">WAIT</span><span>Qlib / FinRL runtime status loading…</span></div>
 </div>
-<div class="chatbar">
-  <button class="chatplus" type="button" id="chatAttach">＋</button>
-  <input class="chatinput" id="quickPrompt" placeholder="例：XAUUSD M1でNautilus / 状態教えて">
-  <button class="chatrun" type="button" id="quickRun">→</button>
-</div>
-<div class="agentTranscript" id="agentTranscript">
-  <div class="agentMsg"><b>Agent</b>常駐中。自然言語でDashboardを操作できます。</div>
-</div>
+
 </section>
 
 <section class="card">
