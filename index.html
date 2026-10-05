@@ -69,7 +69,7 @@ table{width:100%;border-collapse:collapse}td,th{padding:7px;border-bottom:1px so
 <main>
 <header>
 <h1>Research-Line Command Center</h1>
-<div class="muted">iPhone Command Center · Research → ML → RL → Nautilus</div>
+<div class="muted">iPhone Command Center · Research → ML → RL → Nautilus · UI v2026.10.06.1</div>
 </header>
 
 <section class="card">
@@ -90,7 +90,8 @@ table{width:100%;border-collapse:collapse}td,th{padding:7px;border-bottom:1px so
   <div class="heroKpi"><span>Qlib</span><b id="topQlib">—</b></div>
   <div class="heroKpi"><span>FinRL</span><b id="topFinrl">—</b></div>
   <div class="heroKpi"><span>Valid KPI</span><b id="topValidKpi">—</b></div>
-  <div class="heroKpi"><span>Gate Accept</span><b id="topGateAccept">—</b></div>\n  <div class="heroKpi"><span>Candidate Mode</span><b id="topCandidateMode">—</b></div>
+  <div class="heroKpi"><span>Gate Accept</span><b id="topGateAccept">—</b></div>
+  <div class="heroKpi"><span>Candidate Mode</span><b id="topCandidateMode">—</b></div>
 </div>
 <div class="note" id="lastUpdate">Last update: —</div>
 <div class="circuit">
@@ -232,9 +233,10 @@ table{width:100%;border-collapse:collapse}td,th{padding:7px;border-bottom:1px so
   <div class="brief" id="worldLatestVerification">まだ検証履歴はありません。</div>
 </div>
 <div class="grid" style="margin-top:10px">
-  <a class="btn primary" href="https://github.com/Sai310421/research-line/actions/workflows/world-monitor.yml">World Monitor実行</a>
-  <a class="btn" href="https://github.com/Sai310421/research-line/blob/main/research/world_monitor/status.json">Forecast JSON</a>
+  <button class="btn primary" id="worldRunBtn" type="button">World Monitor実行</button>
+  <button class="btn" id="worldRefreshBtn" type="button">Forecast更新</button>
 </div>
+<pre class="brief" id="worldControlOut">Dashboard内で実行・更新します。</pre>
 <p class="note">Forecastは売買指示ではありません。状態・期限・理由・反証条件を保存し、予測期間終了後にHIT / PARTIAL / MISSで自動検証します。</p>
 </section>
 
@@ -250,8 +252,8 @@ table{width:100%;border-collapse:collapse}td,th{padding:7px;border-bottom:1px so
 <button class="action" id="makeBrief" type="button" style="margin-top:9px">Research Briefを生成</button>
 <pre class="brief" id="briefOut">研究条件を入力してResearch Briefを生成します。</pre>
 <div class="grid">
-<a class="btn primary" href="https://github.com/Sai310421/research-line/actions/workflows/control-plane.yml">Cloud RUNへ</a>
-<a class="btn" href="https://github.com/Sai310421/research-line/blob/main/research/vibe/dashboard.html">Vibe本体コード</a>
+<button class="btn primary" id="vibeCloudRunBtn" type="button">Cloud RUN</button>
+<button class="btn" id="vibeUseBriefBtn" type="button">Briefを実行条件へ反映</button>
 </div>
 <p class="note">Vibeは研究フロントエンド、Qlib/FinRLは研究・学習系、最終採点はNautilusです。未接続/未実行値は「—」で表示します。</p>
 </section>
@@ -281,11 +283,11 @@ table{width:100%;border-collapse:collapse}td,th{padding:7px;border-bottom:1px so
 <h2 style="font-size:16px;margin-top:0">スマホ運用</h2>
 <ol>
 <li><b>Cloud RUN</b> をタップ。</li>
-<li><b>Run workflow</b> を開き、symbol / bar / candidateを選択。</li>
-<li>開始後は <b>実行状況</b> で進捗確認。</li>
+<li>開始後は <b>実行状況を更新</b> で進捗確認。</li>
 <li>完了後は <b>Cloud Champion</b> と Run履歴を確認。</li>
+<li>失敗時は <b>RETRY</b>、実行中なら <b>STOP</b>。</li>
 </ol>
-<div class="note">GitHubへのログインが必要です。公開ページ側にはGitHub token・CONTROL_KEY・取引口座情報を保存しません。</div>
+<div class="note">通常操作でGitHub画面を開く必要はありません。CONTROL_KEYはiPhoneのローカル保存のみです。</div>
 </section>
 
 <section class="card">
@@ -297,7 +299,7 @@ table{width:100%;border-collapse:collapse}td,th{padding:7px;border-bottom:1px so
 </section>
 
 <section class="card">
-<a class="btn warn" href="https://github.com/Sai310421/research-line/actions">失敗Runを確認 / RETRY</a>
+<button class="btn warn" id="bottomRetryBtn" type="button">失敗Runを確認 / RETRY</button>
 </section>
 </main>
 <script>
@@ -467,7 +469,8 @@ table{width:100%;border-collapse:collapse}td,th{padding:7px;border-bottom:1px so
       set('topTrades',n.trades??'—');
       set('topCandidates',d.candidates?.count??'—');
       set('topValidKpi',d.candidates?.valid_kpi??'—');
-      set('topGateAccept',d.candidates?.gate_accept??'—');\n      set('topCandidateMode',d.candidates?.real_candidates?'REAL':'SMOKE');
+      set('topGateAccept',d.candidates?.gate_accept??'—');
+      set('topCandidateMode',d.candidates?.real_candidates?'REAL':'SMOKE');
       set('topQlib',d.qlib?.connected?'ONLINE':'WAIT'); set('topFinrl',d.finrl?.connected?'ONLINE':'WAIT');
       const lu=document.getElementById('lastUpdate'); if(lu)lu.textContent='Last update: '+(d.updated_at||'—');
       set('agentState','Vibe '+(d.vibe?.ui_present?'READY':'WAIT')+' · Qlib '+(d.qlib?.connected?'ONLINE':'WAIT')+' · FinRL '+(d.finrl?.connected?'ONLINE':'WAIT')+' · Nautilus '+(n.authoritative?'SCORER':'WAIT'));
@@ -502,7 +505,7 @@ table{width:100%;border-collapse:collapse}td,th{padding:7px;border-bottom:1px so
       'Unknown KPI: N/Aとして扱い、推定値を実測値として表示しない。'
     ].join('\n');
   });
-  document.getElementById('chatAttach')?.addEventListener('click',()=>document.getElementById('fileInput')?.click());
+  document.getElementById('chatAttach')?.addEventListener('click',()=>document.getElementById('dashboardFiles')?.click());
   document.getElementById('quickRun')?.addEventListener('click',()=>{
     const q=(document.getElementById('quickPrompt')?.value||'').trim();
     if(!q)return;
@@ -510,7 +513,25 @@ table{width:100%;border-collapse:collapse}td,th{padding:7px;border-bottom:1px so
     document.getElementById('makeBrief')?.click();
     document.getElementById('briefOut')?.scrollIntoView({behavior:'smooth',block:'center'});
   });
-  render();
+  document.getElementById('worldRunBtn')?.addEventListener('click',async()=>{
+    const out=document.getElementById('worldControlOut');
+    try{
+      const r=await controlCall('/api/world-monitor/dispatch',{method:'POST'});
+      if(out) out.textContent='World Monitorを開始しました。\n'+JSON.stringify(r,null,2);
+    }catch(e){if(out)out.textContent='実行失敗: '+e.message}
+  });
+  document.getElementById('worldRefreshBtn')?.addEventListener('click',async()=>{
+    const out=document.getElementById('worldControlOut');
+    try{await loadStack();if(out)out.textContent='Forecast表示を更新しました。';}
+    catch(e){if(out)out.textContent='更新失敗: '+e.message}
+  });
+  document.getElementById('vibeCloudRunBtn')?.addEventListener('click',()=>document.getElementById('cloudRunBtn')?.click());
+  document.getElementById('vibeUseBriefBtn')?.addEventListener('click',()=>{
+    document.getElementById('makeBrief')?.click();
+    document.getElementById('briefOut')?.scrollIntoView({behavior:'smooth',block:'center'});
+  });
+  document.getElementById('bottomRetryBtn')?.addEventListener('click',()=>document.getElementById('retryLatestBtn')?.click());
+
   loadStack();
 })();
 </script>
