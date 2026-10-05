@@ -61,6 +61,9 @@ button.action{width:100%;min-height:48px;border-radius:11px;border:1px solid #31
 .logline:last-child{border-bottom:0}.tag{font-weight:800}.chatbar{display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:center;margin-top:10px}
 .chatplus,.chatrun{min-width:44px;height:44px;border-radius:50%;border:1px solid #3b4865;background:#11192a;color:#fff;font-weight:800}
 .chatinput{width:100%;min-height:44px;border-radius:22px;border:1px solid #344361;background:#0c1424;color:#fff;padding:10px 14px;font-size:16px}
+.agentTranscript{margin-top:10px;background:#080d18;border:1px solid #26324a;border-radius:12px;padding:10px;max-height:260px;overflow:auto}
+.agentMsg{padding:7px 0;border-bottom:1px solid #1e2a40;font-size:12px;line-height:1.45}
+.agentMsg:last-child{border-bottom:0}.agentMsg b{margin-right:6px}
 @media(max-width:560px){.heroKpis{grid-template-columns:1fr 1fr}.circuit{grid-template-columns:1fr 1fr}}
 table{width:100%;border-collapse:collapse}td,th{padding:7px;border-bottom:1px solid #27324c;text-align:left}
 .moduleControls{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}
@@ -73,7 +76,7 @@ table{width:100%;border-collapse:collapse}td,th{padding:7px;border-bottom:1px so
 <main>
 <header>
 <h1>Research-Line Command Center</h1>
-<div class="muted">iPhone Command Center · Research → ML → RL → Nautilus · UI v2026.10.06.5</div>
+<div class="muted">iPhone Command Center · Research → ML → RL → Nautilus · UI v2026.10.06.6</div>
 </header>
 
 <section class="card">
@@ -115,8 +118,11 @@ table{width:100%;border-collapse:collapse}td,th{padding:7px;border-bottom:1px so
 </div>
 <div class="chatbar">
   <button class="chatplus" type="button" id="chatAttach">＋</button>
-  <input class="chatinput" id="quickPrompt" placeholder="こんなEDGEを探して…">
+  <input class="chatinput" id="quickPrompt" placeholder="例：XAUUSD M1でNautilus / 状態教えて">
   <button class="chatrun" type="button" id="quickRun">→</button>
+</div>
+<div class="agentTranscript" id="agentTranscript">
+  <div class="agentMsg"><b>Agent</b>常駐中。自然言語でDashboardを操作できます。</div>
 </div>
 </section>
 
@@ -644,12 +650,32 @@ table{width:100%;border-collapse:collapse}td,th{padding:7px;border-bottom:1px so
     ].join('\n');
   });
   document.getElementById('chatAttach')?.addEventListener('click',()=>document.getElementById('dashboardFiles')?.click());
-  document.getElementById('quickRun')?.addEventListener('click',()=>{
-    const q=(document.getElementById('quickPrompt')?.value||'').trim();
+  function addAgentMessage(who,text){
+    const box=document.getElementById('agentTranscript'); if(!box)return;
+    const div=document.createElement('div'); div.className='agentMsg';
+    const b=document.createElement('b'); b.textContent=who;
+    const span=document.createElement('span'); span.textContent=text;
+    div.appendChild(b); div.appendChild(span); box.appendChild(div);
+    box.scrollTop=box.scrollHeight;
+  }
+  async function sendAgent(){
+    const input=document.getElementById('quickPrompt');
+    const q=(input?.value||'').trim();
     if(!q)return;
-    const vp=document.getElementById('vibePrompt'); if(vp)vp.value=q;
-    document.getElementById('makeBrief')?.click();
-    document.getElementById('briefOut')?.scrollIntoView({behavior:'smooth',block:'center'});
+    addAgentMessage('You',q);
+    if(input)input.value='';
+    try{
+      const r=await controlCall('/api/v2/agent',{method:'POST',body:JSON.stringify({text:q})});
+      addAgentMessage('Agent',r.reply||'完了');
+      if(r.execution) addAgentMessage('Core',JSON.stringify(r.execution));
+      if(r.execution) setTimeout(()=>loadCoreState().catch(()=>{}),1000);
+    }catch(e){
+      addAgentMessage('Agent','失敗: '+e.message);
+    }
+  }
+  document.getElementById('quickRun')?.addEventListener('click',sendAgent);
+  document.getElementById('quickPrompt')?.addEventListener('keydown',e=>{
+    if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendAgent()}
   });
   document.getElementById('refreshCoreBtn')?.addEventListener('click',()=>loadCoreState().catch(e=>{
     const out=document.getElementById('controlOut');if(out)out.textContent='Core更新失敗: '+e.message;
