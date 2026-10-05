@@ -118,14 +118,14 @@ table{width:100%;border-collapse:collapse}td,th{padding:7px;border-bottom:1px so
 <section class="card">
 <h2 style="font-size:16px;margin-top:0">Cloud Control 接続</h2>
 <div class="vibegrid">
-  <input class="vibe" id="controlApiUrl" placeholder="https://research-line-control-api.<your-subdomain>.workers.dev">
+  <input class="vibe" id="controlApiUrl" value="https://research-line-control-api.you310.workers.dev" readonly>
   <input class="vibe" id="controlKey" type="password" placeholder="Control Key">
 </div>
 <div class="grid" style="margin-top:8px">
   <button class="btn primary" id="saveControl" type="button">接続を保存</button>
   <button class="btn" id="testControl" type="button">接続テスト</button>
 </div>
-<p class="note" id="controlState">未接続。Cloud Control URLとControl Keyを設定してください。PCは不要です。</p>
+<p class="note" id="controlState">Cloud Control URLは設定済みです。Control Keyだけ登録すればPC不要で操作できます。</p>
 </section>
 
 <section class="card">
@@ -302,7 +302,7 @@ table{width:100%;border-collapse:collapse}td,th{padding:7px;border-bottom:1px so
 </main>
 <script>
 (()=>{
-  function apiBase(){return (localStorage.getItem('researchLineControlApi')||'').replace(/\/$/,'')}
+  function apiBase(){return (localStorage.getItem('researchLineControlApi')||'https://research-line-control-api.you310.workers.dev').replace(/\/$/,'')}
   function controlKeyValue(){return localStorage.getItem('researchLineControlKey')||''}
   async function controlCall(path,opt={}){
     const base=apiBase();
@@ -317,7 +317,7 @@ table{width:100%;border-collapse:collapse}td,th{padding:7px;border-bottom:1px so
   const apiInput=document.getElementById('controlApiUrl');
   const keyInput=document.getElementById('controlKey');
   const controlState=document.getElementById('controlState');
-  if(apiInput) apiInput.value=localStorage.getItem('researchLineControlApi')||'';
+  if(apiInput) apiInput.value=localStorage.getItem('researchLineControlApi')||'https://research-line-control-api.you310.workers.dev';
   if(keyInput) keyInput.value=localStorage.getItem('researchLineControlKey')||'';
   document.getElementById('saveControl')?.addEventListener('click',()=>{
     localStorage.setItem('researchLineControlApi',(apiInput?.value||'').trim().replace(/\/$/,''));
