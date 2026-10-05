@@ -12,8 +12,8 @@ body{margin:0;background:#090e1a;color:#eef3ff}
 main{max-width:680px;margin:auto;padding:16px 14px 32px}
 h1{font-size:23px;margin:0 0 4px}.muted{color:#91a0bc;font-size:13px}.card{background:#11192a;border:1px solid #26324a;border-radius:16px;padding:14px;margin:12px 0}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
-a.btn{display:flex;align-items:center;justify-content:center;min-height:52px;padding:12px;border-radius:12px;border:1px solid #344361;background:#0c1424;color:#eef3ff;text-decoration:none;font-weight:750;text-align:center}
-a.primary{background:#315ed7;border-color:#315ed7}a.warn{background:#39271b;border-color:#624a2e}
+.btn{display:flex;align-items:center;justify-content:center;min-height:52px;padding:12px;border-radius:12px;border:1px solid #344361;background:#0c1424;color:#eef3ff;text-decoration:none;font-weight:750;text-align:center;font:inherit;cursor:pointer;width:100%}
+.primary{background:#315ed7!important;border-color:#315ed7!important}.warn{background:#39271b!important;border-color:#624a2e!important}
 .pills{display:flex;gap:6px;flex-wrap:wrap}.pill{font-size:11px;padding:5px 8px;border:1px solid #35435e;border-radius:999px}
 ol{padding-left:20px;line-height:1.55}.note{font-size:12px;color:#a9b5ca;line-height:1.5}
 @media(max-width:430px){.grid{grid-template-columns:1fr}}
@@ -242,21 +242,19 @@ button.action{width:100%;min-height:48px;border-radius:11px;border:1px solid #31
 
 <section class="card">
 <h2 style="font-size:16px;margin-top:0">ファイル添付</h2>
-<div class="attachbox" id="dropZone">
-  <div class="attachrow">
-    <button class="attachplus" type="button" id="pickBtn" aria-label="ファイルを添付">＋</button>
-    <div class="attachtext">
+<div class="attachbox">
+  <a class="attachrow" href="https://github.com/Sai310421/research-line/upload/main/research/inbox" style="text-decoration:none;color:inherit">
+    <span class="attachplus" aria-hidden="true">＋</span>
+    <span class="attachtext">
       <b>ファイルを添付</b>
-      <span>ZIP・画像・PDF・MQ5・CSVなど</span>
-    </div>
-  </div>
-  <input class="hiddenfile" id="fileInput" type="file" multiple accept=".zip,.png,.jpg,.jpeg,.webp,.pdf,.mq4,.mq5,.csv,.json,.txt,.py,.ipynb,.mp4,.mov,.m4v,.avi">
-  <div class="filechips" id="fileChips"></div>
+      <span>ZIP・画像・PDF・MQ4/MQ5・CSV・Python・動画など</span>
+    </span>
+  </a>
   <div class="attachactions">
-    <button class="btn primary" type="button" id="continueUpload" style="border:1px solid #315ed7;background:#315ed7;color:#fff">GitHubへ保存</button>
+    <a class="btn primary" href="https://github.com/Sai310421/research-line/upload/main/research/inbox">ファイルを選ぶ</a>
     <a class="btn" href="https://github.com/Sai310421/research-line/tree/main/research/inbox">Inboxを確認</a>
   </div>
-  <div class="attachhint">GPTの「＋」に近い操作感です。現状はバックエンドを置かないため、最終保存だけGitHubの認証済みアップロード画面へ引き継ぎます。</div>
+  <div class="attachhint">タップするとPrivate Repoの認証済みアップロード画面へ進みます。そこで「choose your files」→「Commit changes」で保存します。</div>
 </div>
 </section>
 
@@ -285,28 +283,6 @@ button.action{width:100%;min-height:48px;border-radius:11px;border:1px solid #31
 </main>
 <script>
 (()=>{
-  const input=document.getElementById('fileInput');
-  const pick=document.getElementById('pickBtn');
-  const chips=document.getElementById('fileChips');
-  const go=document.getElementById('continueUpload');
-  let chosen=[];
-  function render(){
-    chips.innerHTML='';
-    chosen.forEach((f,i)=>{
-      const c=document.createElement('div'); c.className='filechip';
-      const n=document.createElement('span'); n.className='name'; n.textContent=f.name;
-      const x=document.createElement('button'); x.type='button'; x.textContent='×'; x.setAttribute('aria-label',f.name+'を外す');
-      x.addEventListener('click',()=>{chosen.splice(i,1);render()});
-      c.append(n,x); chips.appendChild(c);
-    });
-    go.textContent=chosen.length?chosen.length+'件をGitHubへ保存':'GitHubへ保存';
-  }
-  pick?.addEventListener('click',()=>input?.click());
-  input?.addEventListener('change',()=>{chosen=[...input.files];render()});
-  go?.addEventListener('click',()=>{location.href='https://github.com/Sai310421/research-line/upload/main/research/inbox'});
-  const dz=document.getElementById('dropZone');
-  dz?.addEventListener('dragover',e=>{e.preventDefault()});
-  dz?.addEventListener('drop',e=>{e.preventDefault();chosen=[...e.dataTransfer.files];render()});
   async function loadStack(){
     try{
       const r=await fetch('./status.json',{cache:'no-store'});
