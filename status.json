@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-05T02:08:45.282359+00:00",
+  "updated_at": "2026-10-05T07:07:08.706779+00:00",
   "source": "Sai310421/research-line@main",
   "qlib": {
     "version": "0.9.7",
@@ -62,12 +62,12 @@
     "oos_rows": 266
   },
   "world_monitor": {
-    "updated_at": "2026-10-05T02:08:45.236617+00:00",
+    "updated_at": "2026-10-05T07:07:08.494566+00:00",
     "current_state": "STRESS",
     "next_state": "CRISIS",
     "eta_hours": 24.0,
-    "horizon_start": "2026-10-05T14:08:45.236617+00:00",
-    "horizon_end": "2026-10-06T14:08:45.236617+00:00",
+    "horizon_start": "2026-10-05T19:07:08.494566+00:00",
+    "horizon_end": "2026-10-06T19:07:08.494566+00:00",
     "confidence": 0.9,
     "reasons": [
       "geopolitics: High-severity signal: war (score=1.00)",
@@ -89,7 +89,7 @@
           "High-severity signal: war",
           "Watch signal: military",
           "High-severity signal: missile",
-          "Independent sources=17, confirmed events=19, calibration=1.00"
+          "Independent sources=17, confirmed events=20, calibration=1.00"
         ]
       },
       "macro": {
@@ -107,7 +107,7 @@
         "score": 0.0,
         "state": "CALM",
         "reasons": [
-          "Independent sources=16, confirmed events=0, calibration=1.00"
+          "Independent sources=15, confirmed events=0, calibration=1.00"
         ]
       },
       "shipping": {
@@ -117,9 +117,9 @@
           "Watch signal: red sea",
           "Watch signal: red sea",
           "High-severity signal: blockade",
-          "High-severity signal: blockade",
           "Watch signal: red sea",
-          "Independent sources=14, confirmed events=14, calibration=1.00"
+          "High-severity signal: blockade",
+          "Independent sources=13, confirmed events=14, calibration=1.00"
         ]
       },
       "cyber": {
@@ -131,7 +131,7 @@
           "Watch signal: ransomware",
           "Watch signal: cyberattack",
           "Watch signal: cyberattack",
-          "Independent sources=16, confirmed events=15, calibration=1.00"
+          "Independent sources=15, confirmed events=15, calibration=1.00"
         ]
       },
       "market_stress": {
@@ -192,7 +192,7 @@
       "OIL": "Energy/shipping escalation raises upside-tail risk; reversal risk rises if supply disruption is disproved.",
       "EQUITY": "Higher stress generally raises downside/volatility risk; confirmation required."
     },
-    "latest_forecast_id": "b58536d17400db5d",
+    "latest_forecast_id": "0140d5ddcd89f14c",
     "verification": {
       "verified": 0,
       "hit": 0,
