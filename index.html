@@ -196,7 +196,11 @@ button.action{width:100%;min-height:48px;border-radius:11px;border:1px solid #31
   </div>
 </div>
 <div style="margin-top:12px">
-  <h3 style="font-size:14px;margin:0 0 7px">なぜこの予測なのか</h3>
+  <h3 style="font-size:14px;margin:0 0 7px">予測の解説</h3>
+  <div class="brief" id="worldExplainJa">解説を読込中…</div>
+</div>
+<div style="margin-top:12px">
+  <h3 style="font-size:14px;margin:0 0 7px">根拠シグナル</h3>
   <div class="brief" id="worldReasons">理由を読込中…</div>
 </div>
 <div style="margin-top:12px">
@@ -206,6 +210,10 @@ button.action{width:100%;min-height:48px;border-radius:11px;border:1px solid #31
 <div style="margin-top:12px">
   <h3 style="font-size:14px;margin:0 0 7px">6軸状態</h3>
   <div class="brief" id="worldDimensions">状態を読込中…</div>
+</div>
+<div style="margin-top:12px">
+  <h3 style="font-size:14px;margin:0 0 7px">最新の答え合わせ理由</h3>
+  <div class="brief" id="worldLatestVerification">まだ検証履歴はありません。</div>
 </div>
 <div class="grid" style="margin-top:10px">
   <a class="btn primary" href="https://github.com/Sai310421/research-line/actions/workflows/world-monitor.yml">World Monitor実行</a>
@@ -319,12 +327,19 @@ button.action{width:100%;min-height:48px;border-radius:11px;border:1px solid #31
       show('worldHit',w.verification?.hit??0);
       show('worldPartial',w.verification?.partial??0);
       show('worldMiss',w.verification?.miss??0);
+      const explainJaEl=document.getElementById('worldExplainJa');
+      if(explainJaEl) explainJaEl.textContent=w.explanation_ja||'—';
       const reasonEl=document.getElementById('worldReasons');
       if(reasonEl) reasonEl.textContent=(w.reasons||[]).map((x,i)=>(i+1)+'. '+x).join('\n')||'—';
       const invEl=document.getElementById('worldInvalidations');
       if(invEl) invEl.textContent=(w.invalidation_conditions||[]).map((x,i)=>(i+1)+'. '+x).join('\n')||'—';
       const dimEl=document.getElementById('worldDimensions');
       if(dimEl) dimEl.textContent=Object.entries(w.dimensions||{}).map(([k,v])=>k+': '+(v.state||'—')+' / '+(v.score==null?'—':Number(v.score).toFixed(2))).join('\n')||'—';
+      const latestVerEl=document.getElementById('worldLatestVerification');
+      const lv=w.latest_verification;
+      if(latestVerEl) latestVerEl.textContent=lv
+        ? (lv.explanation||'')+'\n'+(lv.reason_review||[]).join('\n')
+        : 'まだ検証履歴はありません。';
       const n=d.nautilus||{};
       const note=document.getElementById('stackNote');
       if(note) note.textContent='Sanitized status · '+(d.candidates?.real_candidates?'REAL':'SMOKE')+' · Data '+(d.candidates?.dataset||'—')+' · Train/OOS '+(d.candidates?.train_rows??'—')+'/'+(d.candidates?.oos_rows??'—')+' · Candidates '+(d.candidates?.count??'—')+' · Valid KPI '+(d.candidates?.valid_kpi??'—')+' · Gate '+(d.candidates?.gate_accept??'—')+' · Nautilus Champion '+(n.champion_state||'—')+' · PF '+(n.pf??'—')+' · MaxDD '+(n.max_dd_pct??'—')+'%';
