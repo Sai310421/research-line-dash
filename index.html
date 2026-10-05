@@ -273,7 +273,7 @@ table{width:100%;border-collapse:collapse}td,th{padding:7px;border-bottom:1px so
     <button class="btn" type="button" id="refreshInboxBtn">Inboxを確認</button>
   </div>
   <pre class="brief" id="uploadStatus">ファイル未選択。</pre>
-  <div class="attachhint">750KB以下はPrivate Repoへ直接保存、大きいファイルはCloudflare R2へ送ります。GitHub画面もPCも不要です。</div>
+  <div class="attachhint">750KB以下はPrivate Repoへ直接保存、大きいファイルはCloudflare R2へ送ります。送信中/成功/失敗をこの欄に表示します。</div>
 </div>
 </section>
 
@@ -386,22 +386,36 @@ table{width:100%;border-collapse:collapse}td,th{padding:7px;border-bottom:1px so
   });
   function fileToB64(file){return new Promise((ok,ng)=>{const r=new FileReader();r.onload=()=>ok(String(r.result).split(',')[1]);r.onerror=ng;r.readAsDataURL(file)})}
   document.getElementById('uploadDashboardFiles')?.addEventListener('click',async()=>{
+    const btn=document.getElementById('uploadDashboardFiles');
     const st=document.getElementById('uploadStatus');const files=[...(dashFiles?.files||[])];
     if(!files.length){if(st)st.textContent='ファイルを選択してください。';return}
-    const results=[];
-    for(const f of files){
+    const results=[]; let done=0;
+    if(btn){btn.disabled=true;btn.textContent='送信中…'}
+    try{
+      for(const f of files){
+        if(st) st.textContent=`送信中 ${done+1}/${files.length}: ${f.name}`;
+        try{
+          if(f.size<=750000){
+            const b64=await fileToB64(f);
+            const r=await controlCall('/api/github/upload',{method:'POST',body:JSON.stringify({name:f.name,content_base64:b64})});
+            results.push({name:f.name,status:'保存済み',path:r.path});
+          }else{
+            const r=await controlCall('/api/object/upload',{method:'POST',headers:{'X-File-Name':f.name,'X-File-Size':String(f.size),'Content-Type':f.type||'application/octet-stream'},body:f});
+            results.push({name:f.name,status:'R2保存済み',object_key:r.object_key,size:r.size});
+          }
+        }catch(e){results.push({name:f.name,status:'失敗',error:e.message})}
+        done++;
+      }
+      if(st)st.textContent=JSON.stringify(results,null,2);
       try{
-        if(f.size<=750000){
-          const b64=await fileToB64(f);
-          const r=await controlCall('/api/github/upload',{method:'POST',body:JSON.stringify({name:f.name,content_base64:b64})});
-          results.push({name:f.name,status:'保存済み',path:r.path});
-        }else{
-          const r=await controlCall('/api/object/upload',{method:'POST',headers:{'X-File-Name':f.name,'Content-Type':f.type||'application/octet-stream'},body:f});
-          results.push({name:f.name,status:'R2保存済み',object_key:r.object_key,size:r.size});
-        }
-      }catch(e){results.push({name:f.name,status:'失敗',error:e.message})}
+        const r=await controlCall('/api/intake');
+        if(st) st.textContent += '\n\nInbox: '+String((r.items||[]).length)+'件確認';
+      }catch(e){
+        if(st) st.textContent += '\n\nInbox更新失敗: '+e.message;
+      }
+    } finally {
+      if(btn){btn.disabled=false;btn.textContent='Dashboardから送信'}
     }
-    if(st)st.textContent=JSON.stringify(results,null,2);
   });
   document.getElementById('refreshInboxBtn')?.addEventListener('click',async()=>{
     const st=document.getElementById('uploadStatus');
