@@ -172,6 +172,49 @@ button.action{width:100%;min-height:48px;border-radius:11px;border:1px solid #31
 </section>
 
 <section class="card">
+<h2 style="font-size:16px;margin-top:0">World Monitor Forecast</h2>
+<div class="sysgrid">
+  <div class="sys">
+    <h3>現在の世界状態</h3>
+    <div class="state" id="worldCurrent">LOADING</div>
+    <div class="kpis">
+      <div class="kpi"><span>Next State</span><b id="worldNext">—</b></div>
+      <div class="kpi"><span>ETA</span><b id="worldEta">—</b></div>
+      <div class="kpi"><span>Confidence</span><b id="worldConfidence">—</b></div>
+      <div class="kpi"><span>Window</span><b id="worldWindow">—</b></div>
+    </div>
+  </div>
+  <div class="sys">
+    <h3>答え合わせ</h3>
+    <div class="state" id="worldAccuracy">—</div>
+    <div class="kpis">
+      <div class="kpi"><span>Verified</span><b id="worldVerified">0</b></div>
+      <div class="kpi"><span>HIT</span><b id="worldHit">0</b></div>
+      <div class="kpi"><span>PARTIAL</span><b id="worldPartial">0</b></div>
+      <div class="kpi"><span>MISS</span><b id="worldMiss">0</b></div>
+    </div>
+  </div>
+</div>
+<div style="margin-top:12px">
+  <h3 style="font-size:14px;margin:0 0 7px">なぜこの予測なのか</h3>
+  <div class="brief" id="worldReasons">理由を読込中…</div>
+</div>
+<div style="margin-top:12px">
+  <h3 style="font-size:14px;margin:0 0 7px">予測が崩れる条件</h3>
+  <div class="brief" id="worldInvalidations">反証条件を読込中…</div>
+</div>
+<div style="margin-top:12px">
+  <h3 style="font-size:14px;margin:0 0 7px">6軸状態</h3>
+  <div class="brief" id="worldDimensions">状態を読込中…</div>
+</div>
+<div class="grid" style="margin-top:10px">
+  <a class="btn primary" href="https://github.com/Sai310421/research-line/actions/workflows/world-monitor.yml">World Monitor実行</a>
+  <a class="btn" href="https://github.com/Sai310421/research-line/blob/main/research/world_monitor/status.json">Forecast JSON</a>
+</div>
+<p class="note">Forecastは売買指示ではありません。状態・期限・理由・反証条件を保存し、予測期間終了後にHIT / PARTIAL / MISSで自動検証します。</p>
+</section>
+
+<section class="card">
 <h2 style="font-size:16px;margin-top:0">Vibe-Trading Research Console</h2>
 <textarea class="vibe" id="vibePrompt" placeholder="例：XAUUSDでPF 1.2以上、DD 5%以内の短期EDGEを探索。66特徴量を使い、OOS優先。"></textarea>
 <div class="vibegrid" style="margin-top:8px">
@@ -264,6 +307,24 @@ button.action{width:100%;min-height:48px;border-radius:11px;border:1px solid #31
       show('qlibState',d.qlib?.state); show('qlibVersion',d.qlib?.version); show('qlibConnected',d.qlib?.connected?'YES':'NO'); show('qlibLast',d.qlib?.last_run); show('qlibCandidates',d.qlib?.candidates);
       show('finrlState',d.finrl?.state); show('finrlVersion',d.finrl?.version); show('finrlConnected',d.finrl?.connected?'YES':'NO'); show('finrlLast',d.finrl?.last_run); show('finrlCandidates',d.finrl?.candidates);
       show('vibeState',d.vibe?.state); show('vibeUi',d.vibe?.ui_present?'READY':'NO'); show('vibeRuntime',d.vibe?.connected?'CONNECTED':'NOT VENDORED'); show('vibeLast',d.vibe?.last_run||d.vibe?.last_brief); show('vibeCandidates',d.vibe?.candidates);
+      const w=d.world_monitor||{};
+      show('worldCurrent',w.current_state);
+      show('worldNext',w.next_state);
+      show('worldEta',w.eta_hours==null?'—':w.eta_hours+'h');
+      show('worldConfidence',w.confidence==null?'—':Math.round(Number(w.confidence)*100)+'%');
+      show('worldWindow',w.horizon_start&&w.horizon_end?(w.horizon_start.slice(5,16)+' → '+w.horizon_end.slice(5,16)):'—');
+      const va=w.verification?.weighted_accuracy;
+      show('worldAccuracy',va==null?'NO HISTORY':Math.round(Number(va)*100)+'%');
+      show('worldVerified',w.verification?.verified??0);
+      show('worldHit',w.verification?.hit??0);
+      show('worldPartial',w.verification?.partial??0);
+      show('worldMiss',w.verification?.miss??0);
+      const reasonEl=document.getElementById('worldReasons');
+      if(reasonEl) reasonEl.textContent=(w.reasons||[]).map((x,i)=>(i+1)+'. '+x).join('\n')||'—';
+      const invEl=document.getElementById('worldInvalidations');
+      if(invEl) invEl.textContent=(w.invalidation_conditions||[]).map((x,i)=>(i+1)+'. '+x).join('\n')||'—';
+      const dimEl=document.getElementById('worldDimensions');
+      if(dimEl) dimEl.textContent=Object.entries(w.dimensions||{}).map(([k,v])=>k+': '+(v.state||'—')+' / '+(v.score==null?'—':Number(v.score).toFixed(2))).join('\n')||'—';
       const n=d.nautilus||{};
       const note=document.getElementById('stackNote');
       if(note) note.textContent='Sanitized status · '+(d.candidates?.real_candidates?'REAL':'SMOKE')+' · Data '+(d.candidates?.dataset||'—')+' · Train/OOS '+(d.candidates?.train_rows??'—')+'/'+(d.candidates?.oos_rows??'—')+' · Candidates '+(d.candidates?.count??'—')+' · Valid KPI '+(d.candidates?.valid_kpi??'—')+' · Gate '+(d.candidates?.gate_accept??'—')+' · Nautilus Champion '+(n.champion_state||'—')+' · PF '+(n.pf??'—')+' · MaxDD '+(n.max_dd_pct??'—')+'%';
@@ -281,6 +342,7 @@ button.action{width:100%;min-height:48px;border-radius:11px;border:1px solid #31
       set('agentState','Vibe '+(d.vibe?.ui_present?'READY':'WAIT')+' · Qlib '+(d.qlib?.connected?'ONLINE':'WAIT')+' · FinRL '+(d.finrl?.connected?'ONLINE':'WAIT')+' · Nautilus '+(n.authoritative?'SCORER':'WAIT'));
       const logs=document.getElementById('liveLogs');
       if(logs) logs.innerHTML=[
+        ['WORLD',(d.world_monitor?.current_state||'—')+' → '+(d.world_monitor?.next_state||'—')+' / ETA '+(d.world_monitor?.eta_hours??'—')+'h'],
         ['VIBE',d.vibe?.state||'—'],['QLIB',d.qlib?.state||'—'],['FINRL',d.finrl?.state||'—'],
         ['NAUT', 'PF '+(n.pf??'—')+' / WR '+(n.wr??'—')+' / MaxDD '+(n.max_dd_pct??'—')+'% / Trades '+(n.trades??'—')+' / '+(n.promotion_eligible?'PROMOTION READY':'NOT PROMOTED')]
       ].map(x=>'<div class="logline"><span class="tag">'+x[0]+'</span><span>'+x[1]+'</span></div>').join('');
