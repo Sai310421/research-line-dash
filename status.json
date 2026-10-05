@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-05T02:07:55.954513+00:00",
+  "updated_at": "2026-10-05T02:08:26.111998+00:00",
   "source": "Sai310421/research-line@main",
   "qlib": {
     "version": "0.9.7",
@@ -62,12 +62,12 @@
     "oos_rows": 266
   },
   "world_monitor": {
-    "updated_at": "2026-10-05T02:07:55.877370+00:00",
+    "updated_at": "2026-10-05T02:08:26.021468+00:00",
     "current_state": "STRESS",
     "next_state": "CRISIS",
     "eta_hours": 24.0,
-    "horizon_start": "2026-10-05T14:07:55.877370+00:00",
-    "horizon_end": "2026-10-06T14:07:55.877370+00:00",
+    "horizon_start": "2026-10-05T14:08:26.021468+00:00",
+    "horizon_end": "2026-10-06T14:08:26.021468+00:00",
     "confidence": 0.9,
     "reasons": [
       "geopolitics: High-severity signal: war (score=1.00)",
@@ -139,9 +139,52 @@
         "state": "WATCH",
         "reasons": [
           "Watch signal: credit spread",
-          "Independent sources=13, confirmed events=1, calibration=1.00"
+          "Independent sources=14, confirmed events=1, calibration=1.00"
         ]
       }
+    },
+    "calibration": {
+      "dimension_weights": {
+        "geopolitics": 1.0,
+        "macro": 1.0,
+        "energy": 1.0,
+        "shipping": 1.0,
+        "cyber": 1.0,
+        "market_stress": 1.0
+      },
+      "dimension_stats": {
+        "geopolitics": {
+          "verified": 0,
+          "points": 0.0,
+          "accuracy": null
+        },
+        "macro": {
+          "verified": 0,
+          "points": 0.0,
+          "accuracy": null
+        },
+        "energy": {
+          "verified": 0,
+          "points": 0.0,
+          "accuracy": null
+        },
+        "shipping": {
+          "verified": 0,
+          "points": 0.0,
+          "accuracy": null
+        },
+        "cyber": {
+          "verified": 0,
+          "points": 0.0,
+          "accuracy": null
+        },
+        "market_stress": {
+          "verified": 0,
+          "points": 0.0,
+          "accuracy": null
+        }
+      },
+      "updated_at": null
     },
     "expected_market_effects": {
       "XAUUSD": "Risk premium tends to rise as STRESS/CRISIS probability rises; direction must still be confirmed by market structure.",
@@ -149,7 +192,7 @@
       "OIL": "Energy/shipping escalation raises upside-tail risk; reversal risk rises if supply disruption is disproved.",
       "EQUITY": "Higher stress generally raises downside/volatility risk; confirmation required."
     },
-    "latest_forecast_id": "76ebae9eb255d980",
+    "latest_forecast_id": "c2b01f30cf368c9c",
     "verification": {
       "verified": 0,
       "hit": 0,
@@ -159,7 +202,7 @@
     },
     "latest_verification": null,
     "matured_this_run": [],
-    "explanation_ja": "現在はSTRESS、次状態はCRISISを想定。ETAは約24.0時間、信頼度は90%。地政学はCRISIS（score=1.00）。主因: High-severity signal: war。 海運はCRISIS（score=0.89）。主因: Watch signal: red sea。 マクロはCRISIS（score=0.86）。主因: Watch signal: inflation。 予測は反証条件が成立した場合に無効化・再計算します。"
+    "explanation_ja": "現在はSTRESS、次状態はCRISISを想定。ETAは約24.0時間、信頼度は90%。地政学はCRISIS（score=1.00、補正係数=1.00）。主因: High-severity signal: war。 海運はCRISIS（score=0.89、補正係数=1.00）。主因: Watch signal: red sea。 マクロはCRISIS（score=0.86、補正係数=1.00）。主因: Watch signal: inflation。 予測は反証条件が成立した場合に無効化・再計算します。"
   },
   "nautilus": {
     "authoritative": true,
