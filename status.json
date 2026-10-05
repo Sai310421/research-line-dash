@@ -1,12 +1,12 @@
 {
-  "updated_at": "2026-10-05T01:22:44.700659+00:00",
+  "updated_at": "2026-10-05T01:31:05.169872+00:00",
   "source": "Sai310421/research-line@main",
   "qlib": {
     "version": "0.9.7",
     "connected": true,
     "state": "PASS",
     "reason": "qlib init ok",
-    "last_run": "2026-10-05T00:56:22.653976+00:00",
+    "last_run": "2026-10-05T01:30:48.078043+00:00",
     "candidates": 1
   },
   "finrl": {
@@ -14,34 +14,34 @@
     "connected": true,
     "state": "PASS",
     "reason": "finrl distribution present + stable-baselines3 PPO import ok",
-    "last_run": "2026-10-05T00:56:22.653976+00:00",
+    "last_run": "2026-10-05T01:30:48.078043+00:00",
     "candidates": 1
   },
   "vibe": {
     "connected": true,
     "state": "PASS",
     "reason": "vibe-trading source present",
-    "last_run": "2026-10-05T00:56:22.653976+00:00",
+    "last_run": "2026-10-05T01:30:48.078043+00:00",
     "ui_present": true,
     "candidates": 1
   },
   "candidates": {
     "count": 3,
-    "valid_kpi": 1,
+    "valid_kpi": 3,
     "gate_accept": 0,
     "best": {
       "source": "vibe",
       "state": "SCORED",
       "candidate": "research/vibe/candidates/real_candidate.json",
       "score": "research/vibe/candidates/real_nautilus_score.json",
-      "net": -20.809999999999945,
-      "return_pct": -2.0809999999999946,
+      "net": -11.149999999999977,
+      "return_pct": -1.1149999999999978,
       "pf": 0.0,
-      "wr": 0.25,
-      "dd": 0.020809999999999947,
-      "max_dd_pct": 2.0809999999999946,
+      "wr": 0.2,
+      "dd": 0.030220000000000028,
+      "max_dd_pct": 3.022000000000003,
       "trades": 1,
-      "cost": 1.28,
+      "cost": 2.400000000000001,
       "kpi_valid": true,
       "promotion_eligible": true,
       "gate_would_accept": false,
@@ -50,117 +50,18 @@
         "factor": "gtja191_116",
         "formula": "REGBETA(CLOSE, SEQUENCE, 20)",
         "upstream_source": "agent/src/factors/zoo/gtja191/alpha_116.py",
-        "train_rows": 259,
-        "oos_rows": 140
+        "train_rows": 493,
+        "oos_rows": 266
       }
     },
     "alpha_claim": false,
     "real_candidates": true,
     "kind": "research-stack-real-candidates",
     "dataset": "research/loop/training/xauusd_m1.csv",
-    "train_rows": 259,
-    "oos_rows": 140
+    "train_rows": 493,
+    "oos_rows": 266
   },
-  "world_monitor": {
-    "updated_at": "2026-10-05T01:22:44.664364+00:00",
-    "current_state": "STRESS",
-    "next_state": "CRISIS",
-    "eta_hours": 24.0,
-    "horizon_start": "2026-10-05T13:22:44.664364+00:00",
-    "horizon_end": "2026-10-06T13:22:44.664364+00:00",
-    "confidence": 0.9,
-    "reasons": [
-      "geopolitics: High-severity signal: war (score=1.00)",
-      "shipping: Watch signal: red sea (score=0.89)",
-      "macro: Watch signal: inflation (score=0.86)"
-    ],
-    "invalidation_conditions": [
-      "Top-risk dimension score falls below 0.30 before horizon",
-      "Independent confirmation is absent for the leading driver",
-      "Ceasefire/policy reversal or infrastructure normalization materially changes the driver"
-    ],
-    "dimensions": {
-      "geopolitics": {
-        "score": 1.0,
-        "state": "CRISIS",
-        "reasons": [
-          "High-severity signal: war",
-          "High-severity signal: missile",
-          "High-severity signal: war",
-          "Watch signal: military",
-          "High-severity signal: missile",
-          "Independent sources=17, confirmed events=19"
-        ]
-      },
-      "macro": {
-        "score": 0.8625,
-        "state": "CRISIS",
-        "reasons": [
-          "Watch signal: inflation",
-          "High-severity signal: default",
-          "High-severity signal: default",
-          "High-severity signal: default",
-          "Independent sources=15, confirmed events=4"
-        ]
-      },
-      "energy": {
-        "score": 0.0,
-        "state": "CALM",
-        "reasons": [
-          "Independent sources=15, confirmed events=0"
-        ]
-      },
-      "shipping": {
-        "score": 0.89,
-        "state": "CRISIS",
-        "reasons": [
-          "Watch signal: red sea",
-          "Watch signal: red sea",
-          "High-severity signal: blockade",
-          "High-severity signal: blockade",
-          "Watch signal: red sea",
-          "Independent sources=14, confirmed events=14"
-        ]
-      },
-      "cyber": {
-        "score": 0.45,
-        "state": "WATCH",
-        "reasons": [
-          "Watch signal: cyberattack",
-          "Watch signal: ransomware",
-          "Watch signal: ransomware",
-          "Watch signal: cyberattack",
-          "Watch signal: cyberattack",
-          "Independent sources=16, confirmed events=15"
-        ]
-      },
-      "market_stress": {
-        "score": 0.45,
-        "state": "WATCH",
-        "reasons": [
-          "Watch signal: credit spread",
-          "Independent sources=13, confirmed events=1"
-        ]
-      }
-    },
-    "expected_market_effects": {
-      "XAUUSD": "Risk premium tends to rise as STRESS/CRISIS probability rises; direction must still be confirmed by market structure.",
-      "USDJPY": "Safe-haven and yield effects may conflict; use as context, not a direct trade signal.",
-      "OIL": "Energy/shipping escalation raises upside-tail risk; reversal risk rises if supply disruption is disproved.",
-      "EQUITY": "Higher stress generally raises downside/volatility risk; confirmation required."
-    },
-    "latest_forecast_id": "489d9b2888c74fd9",
-    "verification": {
-      "verified": 0,
-      "hit": 0,
-      "partial": 0,
-      "miss": 0,
-      "weighted_accuracy": null
-    },
-    "latest_verification": null,
-    "matured_this_run": [],
-    "explanation_ja": "現在はSTRESS、次状態はCRISISを想定。ETAは約24.0時間、信頼度は90%。地政学はCRISIS（score=1.00）。主因: High-severity signal: war。 海運はCRISIS（score=0.89）。主因: Watch signal: red sea。 マクロはCRISIS（score=0.86）。主因: Watch signal: inflation。 予測は反証条件が成立した場合に無効化・再計算します。"
-  },
+  "world_monitor": {},
   "nautilus": {
     "authoritative": true,
     "champion_state": "baseline",
