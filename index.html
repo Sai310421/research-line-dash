@@ -334,7 +334,8 @@ button.action{width:100%;min-height:48px;border-radius:11px;border:1px solid #31
       const invEl=document.getElementById('worldInvalidations');
       if(invEl) invEl.textContent=(w.invalidation_conditions||[]).map((x,i)=>(i+1)+'. '+x).join('\n')||'—';
       const dimEl=document.getElementById('worldDimensions');
-      if(dimEl) dimEl.textContent=Object.entries(w.dimensions||{}).map(([k,v])=>k+': '+(v.state||'—')+' / '+(v.score==null?'—':Number(v.score).toFixed(2))).join('\n')||'—';
+      const cal=w.calibration?.dimension_weights||{};
+      if(dimEl) dimEl.textContent=Object.entries(w.dimensions||{}).map(([k,v])=>k+': '+(v.state||'—')+' / score '+(v.score==null?'—':Number(v.score).toFixed(2))+' / weight '+Number(cal[k]??1).toFixed(2)).join('\n')||'—';
       const latestVerEl=document.getElementById('worldLatestVerification');
       const lv=w.latest_verification;
       if(latestVerEl) latestVerEl.textContent=lv
