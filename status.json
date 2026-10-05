@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-05T01:22:12.957384+00:00",
+  "updated_at": "2026-10-05T01:22:44.700659+00:00",
   "source": "Sai310421/research-line@main",
   "qlib": {
     "version": "0.9.7",
@@ -62,12 +62,12 @@
     "oos_rows": 140
   },
   "world_monitor": {
-    "updated_at": "2026-10-05T01:22:12.920687+00:00",
+    "updated_at": "2026-10-05T01:22:44.664364+00:00",
     "current_state": "STRESS",
     "next_state": "CRISIS",
     "eta_hours": 24.0,
-    "horizon_start": "2026-10-05T13:22:12.920687+00:00",
-    "horizon_end": "2026-10-06T13:22:12.920687+00:00",
+    "horizon_start": "2026-10-05T13:22:44.664364+00:00",
+    "horizon_end": "2026-10-06T13:22:44.664364+00:00",
     "confidence": 0.9,
     "reasons": [
       "geopolitics: High-severity signal: war (score=1.00)",
@@ -149,7 +149,7 @@
       "OIL": "Energy/shipping escalation raises upside-tail risk; reversal risk rises if supply disruption is disproved.",
       "EQUITY": "Higher stress generally raises downside/volatility risk; confirmation required."
     },
-    "latest_forecast_id": "372616e449674475",
+    "latest_forecast_id": "489d9b2888c74fd9",
     "verification": {
       "verified": 0,
       "hit": 0,
@@ -157,7 +157,9 @@
       "miss": 0,
       "weighted_accuracy": null
     },
-    "matured_this_run": []
+    "latest_verification": null,
+    "matured_this_run": [],
+    "explanation_ja": "現在はSTRESS、次状態はCRISISを想定。ETAは約24.0時間、信頼度は90%。地政学はCRISIS（score=1.00）。主因: High-severity signal: war。 海運はCRISIS（score=0.89）。主因: Watch signal: red sea。 マクロはCRISIS（score=0.86）。主因: Watch signal: inflation。 予測は反証条件が成立した場合に無効化・再計算します。"
   },
   "nautilus": {
     "authoritative": true,
