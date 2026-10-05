@@ -69,7 +69,7 @@ table{width:100%;border-collapse:collapse}td,th{padding:7px;border-bottom:1px so
 <main>
 <header>
 <h1>Research-Line Command Center</h1>
-<div class="muted">iPhone Command Center · Research → ML → RL → Nautilus · UI v2026.10.06.1</div>
+<div class="muted">iPhone Command Center · Research → ML → RL → Nautilus · UI v2026.10.06.2</div>
 </header>
 
 <section class="card">
@@ -127,6 +127,20 @@ table{width:100%;border-collapse:collapse}td,th{padding:7px;border-bottom:1px so
   <button class="btn" id="testControl" type="button">接続テスト</button>
 </div>
 <p class="note" id="controlState">Cloud Control URLは設定済みです。Control Keyだけ登録すればPC不要で操作できます。</p>
+</section>
+
+<section class="card">
+<h2 style="font-size:16px;margin-top:0">Core v2 Runtime</h2>
+<div class="heroKpis">
+  <div class="heroKpi"><span>Core</span><b id="coreVersion">—</b></div>
+  <div class="heroKpi"><span>Architecture</span><b id="coreArch">—</b></div>
+  <div class="heroKpi"><span>Active Jobs</span><b id="coreActive">—</b></div>
+  <div class="heroKpi"><span>R2 Usage</span><b id="coreR2">—</b></div>
+</div>
+<div class="sysgrid" id="coreModules">
+  <div class="sys"><h3>Core Modules</h3><div class="state">LOADING</div></div>
+</div>
+<p class="note" id="coreNote">Single Control Core → Distributed Workers</p>
 </section>
 
 <section class="card">
@@ -316,6 +330,28 @@ table{width:100%;border-collapse:collapse}td,th{padding:7px;border-bottom:1px so
     if(!r.ok) throw new Error(j.detail||j.error||('HTTP '+r.status));
     return j;
   }
+  async function loadCoreState(){
+    const d=await controlCall('/api/v2/state');
+    const set=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v};
+    set('coreVersion',d.core?.version||'—');
+    set('coreArch','Core v2');
+    set('coreActive',String(d.queue?.active?.length??0));
+    const bytes=d.state?.r2?.bytes;
+    set('coreR2',bytes==null?'—':(bytes/1024/1024).toFixed(1)+' MB');
+    const box=document.getElementById('coreModules');
+    if(box){
+      box.innerHTML=(d.modules||[]).map(m=>
+        '<div class="sys"><h3>'+m.label+'</h3><div class="state">'+m.state+'</div><div class="note">'+(m.detail||'—')+'</div></div>'
+      ).join('');
+    }
+    const note=document.getElementById('coreNote');
+    if(note) note.textContent='Core '+(d.core?.version||'—')+' · '+(d.core?.architecture||'—')+' · adapters: '+Object.entries(d.adapters||{}).map(([k,v])=>k+'='+v).join(' / ');
+    return d;
+  }
+  async function coreCommand(command,payload={}){
+    return controlCall('/api/v2/command',{method:'POST',body:JSON.stringify({command,payload})});
+  }
+
   const apiInput=document.getElementById('controlApiUrl');
   const keyInput=document.getElementById('controlKey');
   const controlState=document.getElementById('controlState');
@@ -327,7 +363,7 @@ table{width:100%;border-collapse:collapse}td,th{padding:7px;border-bottom:1px so
     if(controlState) controlState.textContent='接続設定を保存しました。';
   });
   document.getElementById('testControl')?.addEventListener('click',async()=>{
-    try{await controlCall('/api/github/health');if(controlState)controlState.textContent='ONLINE · Cloud Control接続OK';}
+    try{await controlCall('/api/github/health');await loadCoreState();if(controlState)controlState.textContent='ONLINE · Core v2接続OK';}
     catch(e){if(controlState)controlState.textContent='接続失敗: '+e.message}
   });
   async function loadRemoteRuns(){
@@ -341,14 +377,14 @@ table{width:100%;border-collapse:collapse}td,th{padding:7px;border-bottom:1px so
     const out=document.getElementById('controlOut');
     try{
       const body={mode:'cloud',kind:'source',source:'research/nautilus/backtest.py',bar:'M1',symbol:'XAUUSD'};
-      const r=await controlCall('/api/github/dispatch',{method:'POST',body:JSON.stringify(body)});
+      const r=await coreCommand('research.run',body);
       if(out) out.textContent=JSON.stringify(r,null,2);
       setTimeout(()=>loadRemoteRuns().catch(()=>{}),1500);
     }catch(e){if(out)out.textContent=e.message}
   });
   document.getElementById('refreshRunsBtn')?.addEventListener('click',async()=>{
     const out=document.getElementById('controlOut');
-    try{const rows=await loadRemoteRuns();if(out)out.textContent='Run '+rows.length+'件を取得しました。';}
+    try{const rows=await loadRemoteRuns();await loadCoreState();if(out)out.textContent='Run '+rows.length+'件を取得しました。';}
     catch(e){if(out)out.textContent=e.message}
   });
   document.getElementById('championBtn')?.addEventListener('click',async()=>{
@@ -366,7 +402,7 @@ table{width:100%;border-collapse:collapse}td,th{padding:7px;border-bottom:1px so
     try{
       const rows=await loadRemoteRuns();const x=rows.find(r=>r.conclusion==='failure');
       if(!x) throw new Error('失敗Runがありません');
-      await controlCall('/api/github/run-action',{method:'POST',body:JSON.stringify({run_id:x.id,action:'rerun'})});
+      await coreCommand('run.retry',{run_id:x.id});
       if(out)out.textContent='#'+x.run_number+' をRETRYしました。';
     }catch(e){if(out)out.textContent=e.message}
   });
@@ -375,7 +411,7 @@ table{width:100%;border-collapse:collapse}td,th{padding:7px;border-bottom:1px so
     try{
       const rows=await loadRemoteRuns();const x=rows.find(r=>r.status==='in_progress'||r.status==='queued');
       if(!x) throw new Error('実行中Runがありません');
-      await controlCall('/api/github/run-action',{method:'POST',body:JSON.stringify({run_id:x.id,action:'cancel'})});
+      await coreCommand('run.cancel',{run_id:x.id});
       if(out)out.textContent='#'+x.run_number+' をSTOPしました。';
     }catch(e){if(out)out.textContent=e.message}
   });
@@ -516,7 +552,7 @@ table{width:100%;border-collapse:collapse}td,th{padding:7px;border-bottom:1px so
   document.getElementById('worldRunBtn')?.addEventListener('click',async()=>{
     const out=document.getElementById('worldControlOut');
     try{
-      const r=await controlCall('/api/world-monitor/dispatch',{method:'POST'});
+      const r=await coreCommand('world.run',{});
       if(out) out.textContent='World Monitorを開始しました。\n'+JSON.stringify(r,null,2);
     }catch(e){if(out)out.textContent='実行失敗: '+e.message}
   });
@@ -533,6 +569,7 @@ table{width:100%;border-collapse:collapse}td,th{padding:7px;border-bottom:1px so
   document.getElementById('bottomRetryBtn')?.addEventListener('click',()=>document.getElementById('retryLatestBtn')?.click());
 
   loadStack();
+  if(controlKeyValue()) loadCoreState().catch(()=>{});
 })();
 </script>
 </body>
