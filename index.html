@@ -76,12 +76,12 @@ table{width:100%;border-collapse:collapse}td,th{padding:7px;border-bottom:1px so
 <main>
 <header>
 <h1>Research-Line Command Center</h1>
-<div class="muted">iPhone Command Center · Research → ML → RL → Nautilus · UI v2026.10.06.6</div>
+<div class="muted">iPhone Command Center · Research → ML → RL → Nautilus · UI v2026.10.06.7</div>
 </header>
 
 <section class="card">
 <div class="pills">
-<span class="pill">PC不要</span><span class="pill">Vercel不要</span><span class="pill">Private Repo制御</span><span class="pill">Nautilus authoritative</span>
+<span class="pill">CLOUD ONLY</span><span class="pill">PC不要</span><span class="pill">Vercel不要</span><span class="pill">Private Repo制御</span><span class="pill">Nautilus authoritative</span>
 </div>
 </section>
 
@@ -143,17 +143,22 @@ table{width:100%;border-collapse:collapse}td,th{padding:7px;border-bottom:1px so
 <h2 style="font-size:16px;margin-top:0">Core v2 Runtime</h2>
 <div class="heroKpis">
   <div class="heroKpi"><span>Core</span><b id="coreVersion">—</b></div>
-  <div class="heroKpi"><span>Architecture</span><b id="coreArch">—</b></div>
+  <div class="heroKpi"><span>Mode</span><b id="coreArch">—</b></div>
   <div class="heroKpi"><span>Active Jobs</span><b id="coreActive">—</b></div>
   <div class="heroKpi"><span>R2 Usage</span><b id="coreR2">—</b></div>
+  <div class="heroKpi"><span>Cloud Ready</span><b id="cloudReady">—</b></div>
 </div>
 <div class="sysgrid" id="coreModules">
   <div class="sys"><h3>Core Modules</h3><div class="state">LOADING</div></div>
 </div>
-<h3 style="font-size:14px;margin:14px 0 7px">Adapters</h3>
+<h3 style="font-size:14px;margin:14px 0 7px">Cloud Adapters</h3>
 <div class="sysgrid" id="adapterGrid">
-  <div class="sys"><h3>Adapters</h3><div class="state">LOADING</div></div>
+  <div class="sys"><h3>Cloud Adapters</h3><div class="state">LOADING</div></div>
 </div>
+<details style="margin-top:12px">
+  <summary class="note" style="cursor:pointer">Optional Adapters（mini-PC / MT5）</summary>
+  <div class="sysgrid" id="optionalAdapterGrid" style="margin-top:8px"></div>
+</details>
 <div class="grid" style="margin-top:10px">
   <button class="btn" id="refreshCoreBtn" type="button">Core状態を更新</button>
   <button class="btn" id="resetModulesBtn" type="button">モジュール配置を初期化</button>
@@ -365,7 +370,8 @@ table{width:100%;border-collapse:collapse}td,th{padding:7px;border-bottom:1px so
     const d=(useOverride && window.__researchLineCoreOverride) ? window.__researchLineCoreOverride : await controlCall('/api/v2/state');
     const set=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v};
     set('coreVersion',d.core?.version||'—');
-    set('coreArch','Core v2');
+    set('coreArch',(d.core?.operating_mode||'cloud_only').toUpperCase());
+    set('cloudReady',d.readiness?.ready?'READY':'WAIT');
     set('coreActive',String(d.queue?.active?.length??0));
     const bytes=d.state?.r2?.bytes;
     set('coreR2',bytes==null?'—':(bytes/1024/1024).toFixed(1)+' MB');
@@ -423,13 +429,20 @@ table{width:100%;border-collapse:collapse}td,th{padding:7px;border-bottom:1px so
     }
     coreSnapshotId=d.snapshot_id||coreSnapshotId;
     const adapterGrid=document.getElementById('adapterGrid');
+    const optionalAdapterGrid=document.getElementById('optionalAdapterGrid');
+    const adapterEntries=Object.entries(d.adapters||{});
     if(adapterGrid){
-      adapterGrid.innerHTML=Object.entries(d.adapters||{}).map(([id,a])=>
+      adapterGrid.innerHTML=adapterEntries.filter(([id,a])=>a.required!==false).map(([id,a])=>
         '<div class="sys"><h3>'+(a.label||id)+'</h3><div class="state">'+(a.state||'—')+'</div><div class="note">'+(a.kind||'—')+' · '+((a.capabilities||[]).join(' / ')||'—')+'</div></div>'
       ).join('');
     }
+    if(optionalAdapterGrid){
+      optionalAdapterGrid.innerHTML=adapterEntries.filter(([id,a])=>a.required===false && (id==='mini_pc'||id==='mt5')).map(([id,a])=>
+        '<div class="sys"><h3>'+(a.label||id)+'</h3><div class="state">'+(a.state||'OPTIONAL')+'</div><div class="note">現在のCloud-only運用では未接続で正常です。</div></div>'
+      ).join('');
+    }
     const note=document.getElementById('coreNote');
-    if(note) note.textContent='Core '+(d.core?.version||'—')+' · '+(d.core?.architecture||'—')+' · snapshot '+(d.snapshot_id||'—')+' · cache '+(d.transport?.cache_hit?'HIT':'MISS');
+    if(note) note.textContent='Core '+(d.core?.version||'—')+' · '+(d.core?.operating_mode||'cloud_only')+' · PC不要 · '+(d.readiness?.ready?'READY':'WAIT')+' · snapshot '+(d.snapshot_id||'—')+' · cache '+(d.transport?.cache_hit?'HIT':'MISS');
     if(d.state?.public_status) await loadStack(d.state.public_status);
     return d;
   }
