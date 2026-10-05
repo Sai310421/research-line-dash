@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-05T16:36:05.529333+00:00",
+  "updated_at": "2026-10-05T18:39:16.979400+00:00",
   "source": "Sai310421/research-line@main",
   "qlib": {
     "version": "0.9.7",
@@ -62,12 +62,12 @@
     "oos_rows": 266
   },
   "world_monitor": {
-    "updated_at": "2026-10-05T12:46:23.186640+00:00",
+    "updated_at": "2026-10-05T18:39:16.920443+00:00",
     "current_state": "CRISIS",
     "next_state": "CRISIS",
     "eta_hours": 24.0,
-    "horizon_start": "2026-10-06T00:46:23.186640+00:00",
-    "horizon_end": "2026-10-07T00:46:23.186640+00:00",
+    "horizon_start": "2026-10-06T06:39:16.920443+00:00",
+    "horizon_end": "2026-10-07T06:39:16.920443+00:00",
     "confidence": 0.9,
     "reasons": [
       "geopolitics: High-severity signal: war (score=1.00)",
@@ -85,11 +85,11 @@
         "state": "CRISIS",
         "reasons": [
           "High-severity signal: war",
+          "High-severity signal: missile",
+          "High-severity signal: missile",
           "High-severity signal: war",
-          "High-severity signal: missile",
           "Watch signal: military",
-          "High-severity signal: missile",
-          "Independent sources=17, confirmed events=19, calibration=1.00"
+          "Independent sources=19, confirmed events=19, calibration=1.00"
         ]
       },
       "macro": {
@@ -106,7 +106,7 @@
         "score": 0.0,
         "state": "CALM",
         "reasons": [
-          "Independent sources=14, confirmed events=0, calibration=1.00"
+          "Independent sources=13, confirmed events=0, calibration=1.00"
         ]
       },
       "shipping": {
@@ -118,7 +118,7 @@
           "High-severity signal: blockade",
           "Watch signal: red sea",
           "High-severity signal: blockade",
-          "Independent sources=14, confirmed events=13, calibration=1.00"
+          "Independent sources=14, confirmed events=14, calibration=1.00"
         ]
       },
       "cyber": {
@@ -191,7 +191,7 @@
       "OIL": "Energy/shipping escalation raises upside-tail risk; reversal risk rises if supply disruption is disproved.",
       "EQUITY": "Higher stress generally raises downside/volatility risk; confirmation required."
     },
-    "latest_forecast_id": "bbc2f6f89d4214df",
+    "latest_forecast_id": "c2164e7a9c81458b",
     "verification": {
       "verified": 0,
       "hit": 0,
