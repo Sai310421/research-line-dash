@@ -1,36 +1,65 @@
 {
-  "updated_at": "2026-10-05T00:20:21.425338+00:00",
+  "updated_at": "2026-10-05T00:56:38.017765+00:00",
   "source": "Sai310421/research-line@main",
   "qlib": {
     "version": "0.9.7",
     "connected": true,
     "state": "PASS",
     "reason": "qlib init ok",
-    "last_run": "2026-10-05T00:20:12.028154+00:00",
+    "last_run": "2026-10-05T00:56:22.653976+00:00",
     "candidates": 1
   },
   "finrl": {
     "version": "0.3.7",
-    "connected": false,
-    "state": "WAIT",
-    "reason": "finrl core: ModuleNotFoundError: wrds",
-    "last_run": "2026-10-05T00:20:12.028154+00:00",
-    "candidates": 0
+    "connected": true,
+    "state": "PASS",
+    "reason": "finrl distribution present + stable-baselines3 PPO import ok",
+    "last_run": "2026-10-05T00:56:22.653976+00:00",
+    "candidates": 1
   },
   "vibe": {
     "connected": true,
     "state": "PASS",
     "reason": "vibe-trading source present",
-    "last_run": "2026-10-05T00:20:12.028154+00:00",
+    "last_run": "2026-10-05T00:56:22.653976+00:00",
     "ui_present": true,
     "candidates": 1
   },
   "candidates": {
-    "count": 2,
-    "valid_kpi": 0,
+    "count": 3,
+    "valid_kpi": 1,
     "gate_accept": 0,
-    "best": null,
-    "alpha_claim": false
+    "best": {
+      "source": "vibe",
+      "state": "SCORED",
+      "candidate": "research/vibe/candidates/real_candidate.json",
+      "score": "research/vibe/candidates/real_nautilus_score.json",
+      "net": -20.809999999999945,
+      "return_pct": -2.0809999999999946,
+      "pf": 0.0,
+      "wr": 0.25,
+      "dd": 0.020809999999999947,
+      "max_dd_pct": 2.0809999999999946,
+      "trades": 1,
+      "cost": 1.28,
+      "kpi_valid": true,
+      "promotion_eligible": true,
+      "gate_would_accept": false,
+      "meta": {
+        "engine": "vibe-trading-factor-adapter",
+        "factor": "gtja191_116",
+        "formula": "REGBETA(CLOSE, SEQUENCE, 20)",
+        "upstream_source": "agent/src/factors/zoo/gtja191/alpha_116.py",
+        "train_rows": 259,
+        "oos_rows": 140
+      }
+    },
+    "alpha_claim": false,
+    "real_candidates": true,
+    "kind": "research-stack-real-candidates",
+    "dataset": "research/loop/training/xauusd_m1.csv",
+    "train_rows": 259,
+    "oos_rows": 140
   },
   "nautilus": {
     "authoritative": true,
