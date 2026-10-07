@@ -76,7 +76,7 @@ table{width:100%;border-collapse:collapse}td,th{padding:7px;border-bottom:1px so
 <main>
 <header>
 <h1>Research-Line Command Center</h1>
-<div class="muted">iPhone Command Center · Research → ML → RL → Nautilus · UI v2026.10.06.8</div>
+<div class="muted">iPhone Command Center · Research → ML → RL → Nautilus · UI v2026.10.08.1</div>
 </header>
 
 <section class="card" id="agentTopCard">
@@ -95,7 +95,7 @@ table{width:100%;border-collapse:collapse}td,th{padding:7px;border-bottom:1px so
 
 <section class="card">
 <div class="pills">
-<span class="pill">CLOUD ONLY</span><span class="pill">PC不要</span><span class="pill">Vercel不要</span><span class="pill">Private Repo制御</span><span class="pill">Nautilus authoritative</span>
+<span class="pill">CLOUD ONLY</span><span class="pill">半垂直統合・半並走</span><span class="pill">PC不要</span><span class="pill">Vercel不要</span><span class="pill">Private Repo制御</span><span class="pill">Nautilus authoritative</span>
 </div>
 </section>
 
@@ -449,7 +449,7 @@ table{width:100%;border-collapse:collapse}td,th{padding:7px;border-bottom:1px so
       ).join('');
     }
     const note=document.getElementById('coreNote');
-    if(note) note.textContent='Core '+(d.core?.version||'—')+' · '+(d.core?.operating_mode||'cloud_only')+' · PC不要 · '+(d.readiness?.ready?'READY':'WAIT')+' · snapshot '+(d.snapshot_id||'—')+' · cache '+(d.transport?.cache_hit?'HIT':'MISS');
+    if(note) note.textContent='Core '+(d.core?.version||'—')+' · '+(d.core?.operating_mode||'cloud_only')+' · '+(d.core?.research_profile||'semi_vertical_semi_parallel')+' · PC不要 · '+(d.readiness?.ready?'READY':'WAIT')+' · snapshot '+(d.snapshot_id||'—')+' · cache '+(d.transport?.cache_hit?'HIT':'MISS');
     if(d.state?.public_status) await loadStack(d.state.public_status);
     return d;
   }
