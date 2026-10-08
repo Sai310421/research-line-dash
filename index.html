@@ -76,7 +76,7 @@ table{width:100%;border-collapse:collapse}td,th{padding:7px;border-bottom:1px so
 <main>
 <header>
 <h1>Research-Line Command Center</h1>
-<div class="muted">iPhone Command Center · Research → ML → RL → Nautilus · UI v2026.10.08.1</div>
+<div class="muted">iPhone Command Center · Research → ML → RL → Nautilus · UI v2026.10.08.2</div>
 </header>
 
 <section class="card" id="agentTopCard">
@@ -636,6 +636,13 @@ table{width:100%;border-collapse:collapse}td,th{padding:7px;border-bottom:1px so
       set('topGateAccept',d.candidates?.gate_accept??'—');
       set('topCandidateMode',d.candidates?.real_candidates?'REAL':'SMOKE');
       set('topQlib',d.qlib?.connected?'ONLINE':'WAIT'); set('topFinrl',d.finrl?.connected?'ONLINE':'WAIT');
+      const mc=d.candidates?.math_core?.all_gate||{};
+      const rc=d.candidates?.randomchart||{};
+      set('mathCoreState',mc.state||'UNKNOWN');
+      set('dualGateState',rc.dual_gate_state||'—');
+      set('randomChartState',rc.stress_pass===true?'PASS':rc.stress_pass===false?'FAIL':'UNKNOWN');
+      const mm=document.getElementById('mathCoreMissing');
+      if(mm) mm.textContent='未計測KPI: '+((mc.missing||[]).join(' / ')||'なし');
       const lu=document.getElementById('lastUpdate'); if(lu)lu.textContent='Last update: '+(d.updated_at||'—');
       set('agentState','Vibe '+(d.vibe?.ui_present?'READY':'WAIT')+' · Qlib '+(d.qlib?.connected?'ONLINE':'WAIT')+' · FinRL '+(d.finrl?.connected?'ONLINE':'WAIT')+' · Nautilus '+(n.authoritative?'SCORER':'WAIT'));
       const logs=document.getElementById('liveLogs');
