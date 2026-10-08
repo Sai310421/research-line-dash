@@ -232,6 +232,23 @@ table{width:100%;border-collapse:collapse}td,th{padding:7px;border-bottom:1px so
 <p class="note" id="stackNote">状態読込中…</p>
 </section>
 
+<section class="card" id="researchModuleLab">
+<h2 style="font-size:16px;margin-top:0">研究モジュール操作・実用性検査</h2>
+<p class="note">Qlib・FinRLの接続確認と候補生成を分けて確認します。Nautilus Raw Tickの正式合格とは区別します。GitHubでの実行は既存の認証付きCloud Controlから行ってください。</p>
+<div class="grid">
+  <button class="btn" type="button" id="researchRefresh">Qlib / FinRL 状態を再取得</button>
+  <a class="btn primary" target="_blank" rel="noopener noreferrer" href="https://github.com/Sai310421/research-line/actions/workflows/research-stack-probe.yml">研究Stackを実行（GitHub）</a>
+  <a class="btn" target="_blank" rel="noopener noreferrer" href="https://github.com/Sai310421/research-line/actions/workflows/candidate-factory.yml">候補Factory（GitHub）</a>
+  <a class="btn" target="_blank" rel="noopener noreferrer" href="https://github.com/Sai310421/research-line/tree/main/research">研究ソース・候補を確認</a>
+</div>
+<div class="sysgrid" style="margin-top:12px">
+ <div class="sys"><h3>Qlib</h3><p class="note">接続→特徴量→ML候補→Nautilus検証</p><div class="state" id="qlibLabStatus">状態を読込</div></div>
+ <div class="sys"><h3>FinRL</h3><p class="note">PPO等の環境確認→学習候補→Nautilus検証</p><div class="state" id="finrlLabStatus">状態を読込</div></div>
+ <div class="sys"><h3>追加モジュール</h3><p class="note">GitHub候補は直接実行しない。ライセンス・依存関係・通信・安全性を審査し隔離Smokeから昇格。</p><a class="btn" href="https://github.com/Sai310421/research-line/issues/new" target="_blank" rel="noopener noreferrer">GitHub候補を提案</a></div>
+</div>
+<p class="note" id="researchLabNote">接続成功 ≠ 学習完了 ≠ Raw Tick合格。GitHub Actionsの実行履歴とKPIを照合してください。</p>
+</section>
+
 <section class="card">
 <h2 style="font-size:16px;margin-top:0">World Monitor Forecast</h2>
 <div class="sysgrid">
@@ -675,6 +692,18 @@ table{width:100%;border-collapse:collapse}td,th{padding:7px;border-bottom:1px so
       'Rule: Qlib/FinRLの結果だけでは昇格させない。Nautilus KPIのみ正式採点。',
       'Unknown KPI: N/Aとして扱い、推定値を実測値として表示しない。'
     ].join('\n');
+  });
+  document.getElementById('researchRefresh')?.addEventListener('click',async()=>{
+    const note=document.getElementById('researchLabNote');
+    if(note)note.textContent='状態を更新しています…';
+    try{
+      await loadStack();
+      for(const [src,target] of [['qlibState','qlibLabStatus'],['finrlState','finrlLabStatus']]){
+        const a=document.getElementById(src),b=document.getElementById(target);
+        if(b)b.textContent=a?.textContent||'未確認';
+      }
+      if(note)note.textContent='状態JSON更新完了。表示された状態は最終実行結果とは限りません。GitHub RunとRaw Tick KPIをご確認ください。';
+    }catch(e){if(note)note.textContent='更新失敗: '+e.message;}
   });
   document.getElementById('chatAttach')?.addEventListener('click',()=>document.getElementById('dashboardFiles')?.click());
   function addAgentMessage(who,text){
