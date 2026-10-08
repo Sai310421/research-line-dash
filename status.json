@@ -1,12 +1,12 @@
 {
-  "updated_at": "2026-10-08T02:06:58.724080+00:00",
+  "updated_at": "2026-10-08T03:57:12.509966+00:00",
   "source": "Sai310421/research-line@main",
   "qlib": {
     "version": "0.9.7",
     "connected": true,
     "state": "PASS",
     "reason": "qlib init ok",
-    "last_run": "2026-10-05T01:30:48.078043+00:00",
+    "last_run": "2026-10-08T03:56:44.578317+00:00",
     "candidates": 1
   },
   "finrl": {
@@ -14,14 +14,14 @@
     "connected": true,
     "state": "PASS",
     "reason": "finrl distribution present + stable-baselines3 PPO import ok",
-    "last_run": "2026-10-05T01:30:48.078043+00:00",
+    "last_run": "2026-10-08T03:56:44.578317+00:00",
     "candidates": 1
   },
   "vibe": {
     "connected": true,
     "state": "PASS",
     "reason": "vibe-trading source present",
-    "last_run": "2026-10-05T01:30:48.078043+00:00",
+    "last_run": "2026-10-08T03:56:44.578317+00:00",
     "ui_present": true,
     "candidates": 1
   },
@@ -33,24 +33,74 @@
   },
   "candidates": {
     "count": 3,
-    "valid_kpi": 3,
+    "valid_kpi": 1,
     "gate_accept": 0,
     "best": {
       "source": "vibe",
       "state": "SCORED",
       "candidate": "research/vibe/candidates/real_candidate.json",
       "score": "research/vibe/candidates/real_nautilus_score.json",
-      "net": -11.149999999999977,
-      "return_pct": -1.1149999999999978,
+      "net": -33.200000000000045,
+      "return_pct": -3.3200000000000047,
       "pf": 0.0,
-      "wr": 0.2,
-      "dd": 0.030220000000000028,
-      "max_dd_pct": 3.022000000000003,
+      "wr": 0.3,
+      "dd": 0.04642607040350346,
+      "max_dd_pct": 4.642607040350346,
       "trades": 1,
-      "cost": 2.400000000000001,
+      "cost": 1.6000000000000003,
       "kpi_valid": true,
       "promotion_eligible": true,
       "gate_would_accept": false,
+      "real_gate_pass": false,
+      "randomchart_stress_pass": false,
+      "dual_gate_state": "DUAL_FAIL",
+      "dual_gate_reason": "real Nautilus and RandomChart robustness did not both pass",
+      "randomchart_stress": "research/vibe/candidates/randomchart_stress.json",
+      "math_core_all_gate": {
+        "formula_id": "07.07",
+        "state": "FAIL",
+        "accepted": false,
+        "checks": {
+          "07.01_monthly_return": {
+            "state": "UNKNOWN",
+            "value": null,
+            "threshold": 0.5
+          },
+          "03.05_max_floating_dd": {
+            "state": "PASS",
+            "value": 0.04642607040350346,
+            "threshold": 0.05
+          },
+          "02.11_profit_factor": {
+            "state": "FAIL",
+            "value": 0.0,
+            "threshold": 1.2
+          },
+          "03.13_ruin_probability": {
+            "state": "UNKNOWN",
+            "value": null,
+            "threshold": 0.01
+          },
+          "03.02_min_margin_level": {
+            "state": "UNKNOWN",
+            "value": null,
+            "threshold": 600.0
+          }
+        },
+        "missing": [
+          "07.01_monthly_return",
+          "03.13_ruin_probability",
+          "03.02_min_margin_level"
+        ],
+        "note": "Design target gate. UNKNOWN metrics are never treated as PASS."
+      },
+      "randomchart_summary": {
+        "scenario_count": 3,
+        "valid_rate": 1.0,
+        "ruin_rate": 0.0,
+        "max_dd_pct": 16.439999999999998,
+        "median_pf": 0.0
+      },
       "meta": {
         "engine": "vibe-trading-factor-adapter",
         "factor": "gtja191_116",
@@ -67,12 +117,55 @@
     "train_rows": 493,
     "oos_rows": 266,
     "randomchart": {
-      "stress_pass": null,
-      "dual_gate_state": null,
-      "summary": null
+      "stress_pass": false,
+      "dual_gate_state": "DUAL_FAIL",
+      "summary": {
+        "scenario_count": 3,
+        "valid_rate": 1.0,
+        "ruin_rate": 0.0,
+        "max_dd_pct": 16.439999999999998,
+        "median_pf": 0.0
+      }
     },
     "math_core": {
-      "all_gate": null,
+      "all_gate": {
+        "formula_id": "07.07",
+        "state": "FAIL",
+        "accepted": false,
+        "checks": {
+          "07.01_monthly_return": {
+            "state": "UNKNOWN",
+            "value": null,
+            "threshold": 0.5
+          },
+          "03.05_max_floating_dd": {
+            "state": "PASS",
+            "value": 0.04642607040350346,
+            "threshold": 0.05
+          },
+          "02.11_profit_factor": {
+            "state": "FAIL",
+            "value": 0.0,
+            "threshold": 1.2
+          },
+          "03.13_ruin_probability": {
+            "state": "UNKNOWN",
+            "value": null,
+            "threshold": 0.01
+          },
+          "03.02_min_margin_level": {
+            "state": "UNKNOWN",
+            "value": null,
+            "threshold": 600.0
+          }
+        },
+        "missing": [
+          "07.01_monthly_return",
+          "03.13_ruin_probability",
+          "03.02_min_margin_level"
+        ],
+        "note": "Design target gate. UNKNOWN metrics are never treated as PASS."
+      },
       "formula_set": "AMOS_MQL5_Mathematical_Atlas_v1"
     }
   },
