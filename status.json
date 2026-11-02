@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-01T22:09:56.283116+00:00",
+  "updated_at": "2026-11-02T06:22:59.988782+00:00",
   "source": "Sai310421/research-line@main",
   "qlib": {
     "version": "0.9.7",
@@ -170,12 +170,12 @@
     }
   },
   "world_monitor": {
-    "updated_at": "2026-11-01T22:09:56.160811+00:00",
+    "updated_at": "2026-11-02T06:22:59.933285+00:00",
     "current_state": "STRESS",
     "next_state": "CRISIS",
     "eta_hours": 24.0,
-    "horizon_start": "2026-11-02T10:09:56.160811+00:00",
-    "horizon_end": "2026-11-03T10:09:56.160811+00:00",
+    "horizon_start": "2026-11-02T18:22:59.933285+00:00",
+    "horizon_end": "2026-11-03T18:22:59.933285+00:00",
     "confidence": 0.9,
     "reasons": [
       "geopolitics: High-severity signal: war (score=1.00)",
@@ -195,9 +195,9 @@
           "High-severity signal: war",
           "High-severity signal: missile",
           "Watch signal: military",
-          "High-severity signal: missile",
           "Watch signal: military",
-          "Independent sources=19, confirmed events=19, calibration=1.15"
+          "High-severity signal: war",
+          "Independent sources=17, confirmed events=19, calibration=1.15"
         ]
       },
       "macro": {
@@ -214,7 +214,7 @@
         "score": 0.0,
         "state": "CALM",
         "reasons": [
-          "Independent sources=13, confirmed events=0, calibration=1.00"
+          "Independent sources=17, confirmed events=0, calibration=1.00"
         ]
       },
       "shipping": {
@@ -233,12 +233,12 @@
         "score": 0.45,
         "state": "WATCH",
         "reasons": [
-          "Watch signal: cyberattack",
-          "Watch signal: ransomware",
           "Watch signal: ransomware",
           "Watch signal: cyberattack",
-          "Watch signal: ransomware",
-          "Independent sources=15, confirmed events=16, calibration=1.00"
+          "Watch signal: cyberattack",
+          "Watch signal: cyberattack",
+          "Watch signal: cyberattack",
+          "Independent sources=13, confirmed events=14, calibration=1.00"
         ]
       },
       "market_stress": {
@@ -299,7 +299,7 @@
       "OIL": "Energy/shipping escalation raises upside-tail risk; reversal risk rises if supply disruption is disproved.",
       "EQUITY": "Higher stress generally raises downside/volatility risk; confirmation required."
     },
-    "latest_forecast_id": "0697dd37b234ec95",
+    "latest_forecast_id": "8f6541e700fc84a3",
     "verification": {
       "verified": 28,
       "hit": 28,
