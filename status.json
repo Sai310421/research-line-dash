@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-15T18:56:59.833826+00:00",
+  "updated_at": "2026-11-16T06:45:04.338316+00:00",
   "source": "Sai310421/research-line@main",
   "qlib": {
     "version": "0.9.7",
@@ -170,12 +170,12 @@
     }
   },
   "world_monitor": {
-    "updated_at": "2026-11-15T18:56:59.760485+00:00",
+    "updated_at": "2026-11-16T06:45:04.165542+00:00",
     "current_state": "CRISIS",
     "next_state": "CRISIS",
     "eta_hours": 24.0,
-    "horizon_start": "2026-11-16T06:56:59.760485+00:00",
-    "horizon_end": "2026-11-17T06:56:59.760485+00:00",
+    "horizon_start": "2026-11-16T18:45:04.165542+00:00",
+    "horizon_end": "2026-11-17T18:45:04.165542+00:00",
     "confidence": 0.9,
     "reasons": [
       "geopolitics: High-severity signal: war (score=1.00)",
@@ -193,11 +193,11 @@
         "state": "CRISIS",
         "reasons": [
           "High-severity signal: war",
-          "Watch signal: tension",
           "High-severity signal: war",
-          "High-severity signal: missile",
+          "Watch signal: military",
           "Watch signal: tension",
-          "Independent sources=17, confirmed events=18, calibration=1.13"
+          "Watch signal: tension",
+          "Independent sources=19, confirmed events=19, calibration=1.13"
         ]
       },
       "macro": {
@@ -207,8 +207,9 @@
           "High-severity signal: default",
           "High-severity signal: default",
           "High-severity signal: default",
+          "Watch signal: inflation",
           "High-severity signal: default",
-          "Independent sources=13, confirmed events=4, calibration=1.13"
+          "Independent sources=12, confirmed events=5, calibration=1.13"
         ]
       },
       "energy": {
@@ -219,7 +220,7 @@
         ]
       },
       "shipping": {
-        "score": 0.7634473684210528,
+        "score": 0.7635689655172415,
         "state": "STRESS",
         "reasons": [
           "Watch signal: red sea",
@@ -227,7 +228,7 @@
           "High-severity signal: blockade",
           "High-severity signal: blockade",
           "Watch signal: red sea",
-          "Independent sources=17, confirmed events=13, calibration=1.14"
+          "Independent sources=15, confirmed events=14, calibration=1.14"
         ]
       },
       "cyber": {
@@ -238,8 +239,8 @@
           "Watch signal: cyberattack",
           "Watch signal: ransomware",
           "Watch signal: cyberattack",
-          "Watch signal: cyberattack",
-          "Independent sources=15, confirmed events=14, calibration=1.00"
+          "Watch signal: ransomware",
+          "Independent sources=15, confirmed events=13, calibration=1.00"
         ]
       },
       "market_stress": {
@@ -253,23 +254,23 @@
     },
     "calibration": {
       "dimension_weights": {
-        "geopolitics": 1.1344827586206896,
-        "macro": 1.1344827586206896,
+        "geopolitics": 1.1347457627118644,
+        "macro": 1.1347457627118644,
         "energy": 0.85,
-        "shipping": 1.1394736842105262,
+        "shipping": 1.139655172413793,
         "cyber": 1.0,
         "market_stress": 1.0
       },
       "dimension_stats": {
         "geopolitics": {
-          "verified": 58,
-          "points": 55.0,
-          "accuracy": 0.9482758620689655
+          "verified": 59,
+          "points": 56.0,
+          "accuracy": 0.9491525423728814
         },
         "macro": {
-          "verified": 58,
-          "points": 55.0,
-          "accuracy": 0.9482758620689655
+          "verified": 59,
+          "points": 56.0,
+          "accuracy": 0.9491525423728814
         },
         "energy": {
           "verified": 1,
@@ -277,9 +278,9 @@
           "accuracy": 0.0
         },
         "shipping": {
-          "verified": 57,
-          "points": 55.0,
-          "accuracy": 0.9649122807017544
+          "verified": 58,
+          "points": 56.0,
+          "accuracy": 0.9655172413793104
         },
         "cyber": {
           "verified": 0,
@@ -292,7 +293,7 @@
           "accuracy": null
         }
       },
-      "updated_at": "2026-11-15T18:56:59.762564+00:00"
+      "updated_at": "2026-11-16T06:45:04.169207+00:00"
     },
     "expected_market_effects": {
       "XAUUSD": "Risk premium tends to rise as STRESS/CRISIS probability rises; direction must still be confirmed by market structure.",
@@ -300,22 +301,22 @@
       "OIL": "Energy/shipping escalation raises upside-tail risk; reversal risk rises if supply disruption is disproved.",
       "EQUITY": "Higher stress generally raises downside/volatility risk; confirmation required."
     },
-    "latest_forecast_id": "02deb7be377c7ef6",
+    "latest_forecast_id": "61b573248518013a",
     "verification": {
-      "verified": 58,
-      "hit": 54,
+      "verified": 59,
+      "hit": 55,
       "partial": 2,
       "miss": 2,
-      "weighted_accuracy": 0.9482758620689655
+      "weighted_accuracy": 0.9491525423728814
     },
     "latest_verification": {
-      "forecast_id": "edcab7e7d010688a",
-      "verified_at": "2026-11-15T18:56:59.760485+00:00",
+      "forecast_id": "d7efb230f4610576",
+      "verified_at": "2026-11-16T06:45:04.165542+00:00",
       "observed_state": "CRISIS",
       "result": "HIT",
-      "timing_error_hours": 0.26466749194444444,
+      "timing_error_hours": 0.49275707305555555,
       "score": 1.0,
-      "explanation": "HIT: predicted CRISIS, observed CRISIS. State-distance=0; timing_error_hours=0.3.",
+      "explanation": "HIT: predicted CRISIS, observed CRISIS. State-distance=0; timing_error_hours=0.5.",
       "reason_review": [
         "Predicted=CRISIS, observed=CRISIS",
         "Reason 1: geopolitics: High-severity signal: war (score=1.00)",
@@ -325,43 +326,13 @@
     },
     "matured_this_run": [
       {
-        "forecast_id": "a1e626da563753a3",
-        "verified_at": "2026-11-15T18:56:59.760485+00:00",
-        "observed_state": "CRISIS",
-        "result": "MISS",
-        "timing_error_hours": 12.121786219722223,
-        "score": 0.0,
-        "explanation": "MISS: predicted RECOVERY, observed CRISIS. State-distance=3; timing_error_hours=12.1.",
-        "reason_review": [
-          "Predicted=RECOVERY, observed=CRISIS",
-          "Reason 1: geopolitics: Independent sources=1, confirmed events=0, calibration=1.14 (score=0.00)",
-          "Reason 2: macro: Independent sources=1, confirmed events=0, calibration=1.14 (score=0.00)",
-          "Reason 3: energy: Independent sources=1, confirmed events=0, calibration=1.00 (score=0.00)"
-        ]
-      },
-      {
-        "forecast_id": "9a358e4265d044ec",
-        "verified_at": "2026-11-15T18:56:59.760485+00:00",
+        "forecast_id": "d7efb230f4610576",
+        "verified_at": "2026-11-16T06:45:04.165542+00:00",
         "observed_state": "CRISIS",
         "result": "HIT",
-        "timing_error_hours": 11.102459148333335,
+        "timing_error_hours": 0.49275707305555555,
         "score": 1.0,
-        "explanation": "HIT: predicted CRISIS, observed CRISIS. State-distance=0; timing_error_hours=11.1.",
-        "reason_review": [
-          "Predicted=CRISIS, observed=CRISIS",
-          "Reason 1: geopolitics: High-severity signal: war (score=1.00)",
-          "Reason 2: macro: High-severity signal: default (score=1.00)",
-          "Reason 3: shipping: Watch signal: red sea (score=0.76)"
-        ]
-      },
-      {
-        "forecast_id": "edcab7e7d010688a",
-        "verified_at": "2026-11-15T18:56:59.760485+00:00",
-        "observed_state": "CRISIS",
-        "result": "HIT",
-        "timing_error_hours": 0.26466749194444444,
-        "score": 1.0,
-        "explanation": "HIT: predicted CRISIS, observed CRISIS. State-distance=0; timing_error_hours=0.3.",
+        "explanation": "HIT: predicted CRISIS, observed CRISIS. State-distance=0; timing_error_hours=0.5.",
         "reason_review": [
           "Predicted=CRISIS, observed=CRISIS",
           "Reason 1: geopolitics: High-severity signal: war (score=1.00)",
