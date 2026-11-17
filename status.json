@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-16T22:17:06.656791+00:00",
+  "updated_at": "2026-11-17T08:05:06.211919+00:00",
   "source": "Sai310421/research-line@main",
   "qlib": {
     "version": "0.9.7",
@@ -170,16 +170,16 @@
     }
   },
   "world_monitor": {
-    "updated_at": "2026-11-16T22:17:06.596932+00:00",
+    "updated_at": "2026-11-17T08:05:06.162603+00:00",
     "current_state": "STRESS",
     "next_state": "CRISIS",
     "eta_hours": 24.0,
-    "horizon_start": "2026-11-17T10:17:06.596932+00:00",
-    "horizon_end": "2026-11-18T10:17:06.596932+00:00",
+    "horizon_start": "2026-11-17T20:05:06.162603+00:00",
+    "horizon_end": "2026-11-18T20:05:06.162603+00:00",
     "confidence": 0.9,
     "reasons": [
       "geopolitics: High-severity signal: war (score=1.00)",
-      "shipping: Watch signal: red sea (score=0.64)",
+      "macro: High-severity signal: default (score=1.00)",
       "market_stress: Watch signal: credit spread (score=0.45)"
     ],
     "invalidation_conditions": [
@@ -193,37 +193,37 @@
         "state": "CRISIS",
         "reasons": [
           "High-severity signal: war",
+          "Watch signal: tension",
           "Watch signal: military",
           "Watch signal: tension",
           "High-severity signal: war",
-          "Watch signal: tension",
-          "Independent sources=18, confirmed events=19, calibration=1.13"
+          "Independent sources=17, confirmed events=19, calibration=1.13"
         ]
       },
       "macro": {
-        "score": 0.0,
-        "state": "RECOVERY",
+        "score": 1.0,
+        "state": "CRISIS",
         "reasons": [
-          "Independent sources=1, confirmed events=0, calibration=1.13"
+          "High-severity signal: default",
+          "High-severity signal: default",
+          "High-severity signal: default",
+          "High-severity signal: default",
+          "High-severity signal: default",
+          "Independent sources=12, confirmed events=6, calibration=1.13"
         ]
       },
       "energy": {
         "score": 0.0,
         "state": "CALM",
         "reasons": [
-          "Independent sources=17, confirmed events=0, calibration=0.85"
+          "Independent sources=16, confirmed events=0, calibration=0.85"
         ]
       },
       "shipping": {
-        "score": 0.6356,
-        "state": "STRESS",
+        "score": 0.0,
+        "state": "RECOVERY",
         "reasons": [
-          "Watch signal: red sea",
-          "Watch signal: red sea",
-          "High-severity signal: blockade",
-          "Watch signal: red sea",
-          "Watch signal: red sea",
-          "Independent sources=17, confirmed events=13, calibration=1.14"
+          "Independent sources=1, confirmed events=0, calibration=1.13"
         ]
       },
       "cyber": {
@@ -238,29 +238,29 @@
         "state": "WATCH",
         "reasons": [
           "Watch signal: credit spread",
-          "Independent sources=16, confirmed events=1, calibration=1.00"
+          "Independent sources=15, confirmed events=1, calibration=1.00"
         ]
       }
     },
     "calibration": {
       "dimension_weights": {
-        "geopolitics": 1.130327868852459,
-        "macro": 1.130327868852459,
+        "geopolitics": 1.1282258064516129,
+        "macro": 1.1282258064516129,
         "energy": 0.85,
-        "shipping": 1.135,
+        "shipping": 1.1327868852459015,
         "cyber": 1.0,
         "market_stress": 1.0
       },
       "dimension_stats": {
         "geopolitics": {
-          "verified": 61,
-          "points": 57.0,
-          "accuracy": 0.9344262295081968
+          "verified": 62,
+          "points": 57.5,
+          "accuracy": 0.9274193548387096
         },
         "macro": {
-          "verified": 61,
-          "points": 57.0,
-          "accuracy": 0.9344262295081968
+          "verified": 62,
+          "points": 57.5,
+          "accuracy": 0.9274193548387096
         },
         "energy": {
           "verified": 1,
@@ -268,9 +268,9 @@
           "accuracy": 0.0
         },
         "shipping": {
-          "verified": 60,
-          "points": 57.0,
-          "accuracy": 0.95
+          "verified": 61,
+          "points": 57.5,
+          "accuracy": 0.9426229508196722
         },
         "cyber": {
           "verified": 0,
@@ -283,7 +283,7 @@
           "accuracy": null
         }
       },
-      "updated_at": "2026-11-16T22:17:06.599081+00:00"
+      "updated_at": "2026-11-17T08:05:06.164337+00:00"
     },
     "expected_market_effects": {
       "XAUUSD": "Risk premium tends to rise as STRESS/CRISIS probability rises; direction must still be confirmed by market structure.",
@@ -291,22 +291,22 @@
       "OIL": "Energy/shipping escalation raises upside-tail risk; reversal risk rises if supply disruption is disproved.",
       "EQUITY": "Higher stress generally raises downside/volatility risk; confirmation required."
     },
-    "latest_forecast_id": "83c7a75836287a33",
+    "latest_forecast_id": "457fe6d8cf952e37",
     "verification": {
-      "verified": 61,
+      "verified": 62,
       "hit": 55,
-      "partial": 4,
+      "partial": 5,
       "miss": 2,
-      "weighted_accuracy": 0.9344262295081968
+      "weighted_accuracy": 0.9274193548387096
     },
     "latest_verification": {
-      "forecast_id": "4aebe6ff53bccc6d",
-      "verified_at": "2026-11-16T22:17:06.596932+00:00",
+      "forecast_id": "02deb7be377c7ef6",
+      "verified_at": "2026-11-17T08:05:06.162603+00:00",
       "observed_state": "STRESS",
       "result": "PARTIAL",
-      "timing_error_hours": 3.5208103391666667,
+      "timing_error_hours": 1.1351116994444443,
       "score": 0.5,
-      "explanation": "PARTIAL: predicted CRISIS, observed STRESS. State-distance=1; timing_error_hours=3.5.",
+      "explanation": "PARTIAL: predicted CRISIS, observed STRESS. State-distance=1; timing_error_hours=1.1.",
       "reason_review": [
         "Predicted=CRISIS, observed=STRESS",
         "Reason 1: geopolitics: High-severity signal: war (score=1.00)",
@@ -316,28 +316,13 @@
     },
     "matured_this_run": [
       {
-        "forecast_id": "3ba186aa28130882",
-        "verified_at": "2026-11-16T22:17:06.596932+00:00",
+        "forecast_id": "02deb7be377c7ef6",
+        "verified_at": "2026-11-17T08:05:06.162603+00:00",
         "observed_state": "STRESS",
         "result": "PARTIAL",
-        "timing_error_hours": 11.687016390555556,
+        "timing_error_hours": 1.1351116994444443,
         "score": 0.5,
-        "explanation": "PARTIAL: predicted CRISIS, observed STRESS. State-distance=1; timing_error_hours=11.7.",
-        "reason_review": [
-          "Predicted=CRISIS, observed=STRESS",
-          "Reason 1: geopolitics: High-severity signal: war (score=1.00)",
-          "Reason 2: macro: High-severity signal: default (score=1.00)",
-          "Reason 3: shipping: Watch signal: red sea (score=0.76)"
-        ]
-      },
-      {
-        "forecast_id": "4aebe6ff53bccc6d",
-        "verified_at": "2026-11-16T22:17:06.596932+00:00",
-        "observed_state": "STRESS",
-        "result": "PARTIAL",
-        "timing_error_hours": 3.5208103391666667,
-        "score": 0.5,
-        "explanation": "PARTIAL: predicted CRISIS, observed STRESS. State-distance=1; timing_error_hours=3.5.",
+        "explanation": "PARTIAL: predicted CRISIS, observed STRESS. State-distance=1; timing_error_hours=1.1.",
         "reason_review": [
           "Predicted=CRISIS, observed=STRESS",
           "Reason 1: geopolitics: High-severity signal: war (score=1.00)",
@@ -346,7 +331,7 @@
         ]
       }
     ],
-    "explanation_ja": "現在はSTRESS、次状態はCRISISを想定。ETAは約24.0時間、信頼度は90%。地政学はCRISIS（score=1.00、補正係数=1.13）。主因: High-severity signal: war。 海運はSTRESS（score=0.64、補正係数=1.14）。主因: Watch signal: red sea。 市場ストレスはWATCH（score=0.45、補正係数=1.00）。主因: Watch signal: credit spread。 予測は反証条件が成立した場合に無効化・再計算します。"
+    "explanation_ja": "現在はSTRESS、次状態はCRISISを想定。ETAは約24.0時間、信頼度は90%。地政学はCRISIS（score=1.00、補正係数=1.13）。主因: High-severity signal: war。 マクロはCRISIS（score=1.00、補正係数=1.13）。主因: High-severity signal: default。 市場ストレスはWATCH（score=0.45、補正係数=1.00）。主因: Watch signal: credit spread。 予測は反証条件が成立した場合に無効化・再計算します。"
   },
   "nautilus": {
     "authoritative": true,
