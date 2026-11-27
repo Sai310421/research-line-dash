@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-26T21:42:18.254388+00:00",
+  "updated_at": "2026-11-27T08:45:55.639221+00:00",
   "source": "Sai310421/research-line@main",
   "qlib": {
     "version": "0.9.7",
@@ -170,17 +170,17 @@
     }
   },
   "world_monitor": {
-    "updated_at": "2026-11-26T21:42:18.201973+00:00",
+    "updated_at": "2026-11-27T08:45:55.607557+00:00",
     "current_state": "CRISIS",
     "next_state": "CRISIS",
     "eta_hours": 24.0,
-    "horizon_start": "2026-11-27T09:42:18.201973+00:00",
-    "horizon_end": "2026-11-28T09:42:18.201973+00:00",
+    "horizon_start": "2026-11-27T20:45:55.607557+00:00",
+    "horizon_end": "2026-11-28T20:45:55.607557+00:00",
     "confidence": 0.9,
     "reasons": [
       "geopolitics: High-severity signal: war (score=1.00)",
-      "macro: High-severity signal: default (score=1.00)",
-      "shipping: Watch signal: red sea (score=0.75)"
+      "shipping: Watch signal: red sea (score=1.00)",
+      "macro: Watch signal: inflation (score=0.81)"
     ],
     "invalidation_conditions": [
       "Top-risk dimension score falls below 0.30 before horizon",
@@ -194,41 +194,38 @@
         "reasons": [
           "High-severity signal: war",
           "High-severity signal: war",
-          "High-severity signal: war",
+          "Watch signal: ceasefire",
           "Watch signal: tension",
           "High-severity signal: war",
           "Independent sources=18, confirmed events=19, calibration=1.12"
         ]
       },
       "macro": {
-        "score": 1.0,
-        "state": "CRISIS",
+        "score": 0.8131012658227847,
+        "state": "STRESS",
         "reasons": [
+          "Watch signal: inflation",
           "High-severity signal: default",
-          "High-severity signal: default",
-          "High-severity signal: default",
-          "High-severity signal: default",
-          "High-severity signal: default",
-          "Independent sources=15, confirmed events=5, calibration=1.12"
+          "Independent sources=16, confirmed events=2, calibration=1.12"
         ]
       },
       "energy": {
         "score": 0.0,
         "state": "CALM",
         "reasons": [
-          "Independent sources=18, confirmed events=0, calibration=0.85"
+          "Independent sources=17, confirmed events=0, calibration=0.85"
         ]
       },
       "shipping": {
-        "score": 0.7548376623376625,
-        "state": "STRESS",
+        "score": 1.0,
+        "state": "CRISIS",
         "reasons": [
           "Watch signal: red sea",
           "Watch signal: red sea",
-          "High-severity signal: blockade",
-          "High-severity signal: blockade",
           "Watch signal: red sea",
-          "Independent sources=16, confirmed events=15, calibration=1.13"
+          "Watch signal: red sea",
+          "High-severity signal: blockade",
+          "Independent sources=15, confirmed events=14, calibration=1.13"
         ]
       },
       "cyber": {
@@ -236,11 +233,11 @@
         "state": "WATCH",
         "reasons": [
           "Watch signal: cyberattack",
-          "Watch signal: ransomware",
           "Watch signal: cyberattack",
           "Watch signal: ransomware",
           "Watch signal: cyberattack",
-          "Independent sources=16, confirmed events=10, calibration=1.00"
+          "Watch signal: ransomware",
+          "Independent sources=17, confirmed events=14, calibration=1.00"
         ]
       },
       "market_stress": {
@@ -248,7 +245,8 @@
         "state": "WATCH",
         "reasons": [
           "Watch signal: volatility",
-          "Independent sources=17, confirmed events=1, calibration=1.11"
+          "Watch signal: credit spread",
+          "Independent sources=17, confirmed events=2, calibration=1.11"
         ]
       }
     },
@@ -301,7 +299,7 @@
       "OIL": "Energy/shipping escalation raises upside-tail risk; reversal risk rises if supply disruption is disproved.",
       "EQUITY": "Higher stress generally raises downside/volatility risk; confirmation required."
     },
-    "latest_forecast_id": "7167887b571415e1",
+    "latest_forecast_id": "93145573546c2fae",
     "verification": {
       "verified": 80,
       "hit": 68,
@@ -324,39 +322,8 @@
         "Reason 3: shipping: Watch signal: red sea (score=1.00)"
       ]
     },
-    "matured_this_run": [
-      {
-        "forecast_id": "10c706bb3f42f295",
-        "verified_at": "2026-11-26T21:42:18.201973+00:00",
-        "observed_state": "CRISIS",
-        "result": "HIT",
-        "timing_error_hours": 11.12580469138889,
-        "score": 1.0,
-        "explanation": "HIT: predicted CRISIS, observed CRISIS. State-distance=0; timing_error_hours=11.1.",
-        "reason_review": [
-          "Predicted=CRISIS, observed=CRISIS",
-          "Reason 1: geopolitics: Watch signal: tension (score=1.00)",
-          "Reason 2: macro: Watch signal: inflation (score=0.97)",
-          "Reason 3: shipping: Watch signal: red sea (score=0.75)"
-        ]
-      },
-      {
-        "forecast_id": "179fdcd9a3e65e17",
-        "verified_at": "2026-11-26T21:42:18.201973+00:00",
-        "observed_state": "CRISIS",
-        "result": "HIT",
-        "timing_error_hours": 0.9030882324999999,
-        "score": 1.0,
-        "explanation": "HIT: predicted CRISIS, observed CRISIS. State-distance=0; timing_error_hours=0.9.",
-        "reason_review": [
-          "Predicted=CRISIS, observed=CRISIS",
-          "Reason 1: geopolitics: High-severity signal: war (score=1.00)",
-          "Reason 2: macro: High-severity signal: default (score=1.00)",
-          "Reason 3: shipping: Watch signal: red sea (score=1.00)"
-        ]
-      }
-    ],
-    "explanation_ja": "現在はCRISIS、次状態はCRISISを想定。ETAは約24.0時間、信頼度は90%。地政学はCRISIS（score=1.00、補正係数=1.12）。主因: High-severity signal: war。 マクロはCRISIS（score=1.00、補正係数=1.12）。主因: High-severity signal: default。 海運はSTRESS（score=0.75、補正係数=1.13）。主因: Watch signal: red sea。 予測は反証条件が成立した場合に無効化・再計算します。"
+    "matured_this_run": [],
+    "explanation_ja": "現在はCRISIS、次状態はCRISISを想定。ETAは約24.0時間、信頼度は90%。地政学はCRISIS（score=1.00、補正係数=1.12）。主因: High-severity signal: war。 海運はCRISIS（score=1.00、補正係数=1.13）。主因: Watch signal: red sea。 マクロはSTRESS（score=0.81、補正係数=1.12）。主因: Watch signal: inflation。 予測は反証条件が成立した場合に無効化・再計算します。"
   },
   "nautilus": {
     "authoritative": true,
